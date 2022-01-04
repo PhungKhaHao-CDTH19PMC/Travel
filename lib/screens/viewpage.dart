@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:travel/screens/home.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel/screens/place.dart';
+import 'package:travel/screens/profile.dart';
 
 class ViewPage extends StatelessWidget {
   const ViewPage({Key? key}) : super(key: key);
@@ -17,10 +18,10 @@ class ViewPage extends StatelessWidget {
           bottomNavigationBar: menu(),
           body: TabBarView(
             children: [
-              Home(),
+              HomePage(),
               MyGridScreen(),
               Container(child: Icon(Icons.directions_bike)),
-              Container(child: Icon(Icons.directions_bike)),
+              Profile(),
             ],
           ),
         ),
@@ -31,25 +32,22 @@ class ViewPage extends StatelessWidget {
 
 Widget menu() {
   return Container(
-    color: Color(0xFF50B5E4),
-    child: TabBar(
+    color: const Color(0x930E0F0F),
+    child: const TabBar(
       labelColor: Colors.white,
       unselectedLabelColor: Colors.white70,
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorPadding: EdgeInsets.all(5.0),
-      indicatorColor: Colors.blue,
+      indicatorColor: Colors.white,
       tabs: [
-        Tab(text: "HOME", icon: Icon(Icons.home)),
+        Tab(icon: Icon(Icons.home)),
         Tab(
-          text: "Bills",
           icon: Icon(FontAwesomeIcons.route),
         ),
         Tab(
-          text: "Balance",
           icon: Icon(FontAwesomeIcons.bell),
         ),
         Tab(
-          text: "Options",
           icon: Icon(FontAwesomeIcons.user),
         ),
       ],
