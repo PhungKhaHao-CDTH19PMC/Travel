@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +10,8 @@ import '../screens/signup.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'api.dart';
+
 class Login extends StatefulWidget {
   @override
   LoginState createState() {
@@ -16,12 +20,8 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-  final FocusNode focusEmail = FocusNode();
-  final FocusNode focusPassword = FocusNode();
-  final GlobalKey<ScaffoldState> _mainScaffoldKey =
-      new GlobalKey<ScaffoldState>();
 
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
   bool _hidepassword = false;
@@ -29,9 +29,13 @@ class LoginState extends State<Login> {
   //firebase
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
-
+  Iterable s = [];
+  String a='';
+  String b='';
+  String c='';    
   String? errorMessage;
   @override
+
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -43,7 +47,6 @@ class LoginState extends State<Login> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
-        key: _mainScaffoldKey,
         body: Center(
           child: Form(
             key: _formKey,
@@ -73,8 +76,7 @@ class LoginState extends State<Login> {
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
-                                focusNode: focusEmail,
-                                controller: emailController,
+                                controller: usernameController,
                                 validator: (value) {
                                   if (value == null) {
                                     return ("Please Enter Your Email");
@@ -88,7 +90,7 @@ class LoginState extends State<Login> {
                                   return null;
                                 },
                                 onSaved: (value) {
-                                  emailController.text = value!;
+                                  usernameController.text = value!;
                                 },
                                 keyboardType: TextInputType.emailAddress,
                                 style: TextStyle(
@@ -121,7 +123,6 @@ class LoginState extends State<Login> {
                                   right: 25.0),
                               child: TextFormField(
                                 obscureText: _obscureText,
-                                focusNode: focusPassword,
                                 controller: passwordController,
                                 validator: (value) {
                                   RegExp regex = new RegExp(r'^.{6,}$');
@@ -207,15 +208,40 @@ class LoginState extends State<Login> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  signIn(emailController.text,
-                                      passwordController.text);
+                                  API(
+                                  url: "http://10.0.2.2:8000/doan/api/dang_nhap.php/?username=" +
+                                      usernameController.text +
+                                      "&password=" +
+                                      passwordController.text)
+                                  .getDataString()
+                                  .then((value) {
+                                    s=json.decode(value);
+                                     a=s.elementAt(0)["username"].toString();
+                                     b=s.elementAt(0)["password"].toString();
+
+                                     if(a==usernameController.text && b==passwordController.text)
+                                     {
+                                       setState(() {
+                                      c="";
+                                      });
+                                       Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => ViewPage()));
+                                     }
+                                    
+                                  });
+                                  setState(() {
+                                      c="Login fail";
+                                      });
                                 },
                               ),
                             ),
                             Container(
+                                child: Text(c,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.red, fontSize:20),),
+                            ),
+                            Container(
                               child: FlatButton(
                                 child: Text(
-                                  "Forgot Password?",
+                                  'forgot password',
                                   style: TextStyle(
                                       decoration: TextDecoration.underline,
                                       color: Colors.black,
@@ -224,7 +250,8 @@ class LoginState extends State<Login> {
                                 ),
                                 onPressed: () {},
                               ),
-                            )
+                            ),
+                            
                           ],
                         ),
                       ),
@@ -402,45 +429,9 @@ class LoginState extends State<Login> {
         ),
       ),
     );
+    
   }
-
-  void signIn(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        await _auth
-            .signInWithEmailAndPassword(email: email, password: password)
-            .then((uid) => {
-                  Fluttertoast.showToast(msg: "Login Successful"),
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const ViewPage())),
-                });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMessage = "Your email address appears to be malformed.";
-
-            break;
-          case "wrong-password":
-            errorMessage = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMessage = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMessage = "An undefined Error happened.";
-        }
-        Fluttertoast.showToast(msg: errorMessage!);
-        print(error.code);
-      }
-    }
-  }
+  
 }
+
+

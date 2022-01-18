@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,6 +9,8 @@ import 'package:travel/screens/signin.dart';
 import 'package:travel/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'api.dart';
+
 class SignUp extends StatefulWidget {
   @override
   SignUpState createState() {
@@ -15,21 +19,22 @@ class SignUp extends StatefulWidget {
 }
 
 class SignUpState extends State<SignUp> {
-  final FocusNode focusEmail = FocusNode();
-  final FocusNode focusPassword = FocusNode();
-  final FocusNode focusName = FocusNode();
-  final FocusNode focusConfirmPassword = FocusNode();
+
 
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
   TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool _hidepassword = false;
   bool _obscureText = true;
   String? errorMessage;
+  String msg='';
+    Iterable s = [];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,7 +47,7 @@ class SignUpState extends State<SignUp> {
         child: Form(
           key: _formKey,
           child: Container(
-            padding: EdgeInsets.only(top: 80.0),
+            padding: EdgeInsets.only(top: 90.0),
             child: ListView(
               children: <Widget>[
                 Stack(
@@ -56,7 +61,7 @@ class SignUpState extends State<SignUp> {
                           borderRadius: BorderRadius.circular(8.0)),
                       child: Container(
                         width: 360.00,
-                        height: 510.00,
+                        height: 550.00,
                         child: Column(
                           children: <Widget>[
                             Padding(
@@ -66,7 +71,6 @@ class SignUpState extends State<SignUp> {
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
-                                focusNode: focusName,
                                 controller: nameController,
                                 validator: (value) {
                                   RegExp regex = new RegExp(r'^.{6,}$');
@@ -111,21 +115,10 @@ class SignUpState extends State<SignUp> {
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
-                                focusNode: focusEmail,
-                                controller: emailController,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return ('Vui lòng nhập email');
-                                  }
-                                  if (!RegExp(
-                                      '^[a-zA-Z0-9+_.-]+@[a-zA-z0-9.-]+.[a-z]')
-                                      .hasMatch(value)) {
-                                    return ('Nhập email đúng định dạng');
-                                  }
-                                  return null;
-                                },
+                                controller: usernameController,
+                                
                                 onSaved: (value) {
-                                  emailController.text = value!;
+                                  usernameController.text = value!;
                                 },
                                 keyboardType: TextInputType.emailAddress,
                                 style: const TextStyle(
@@ -135,11 +128,11 @@ class SignUpState extends State<SignUp> {
                                 decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     icon: Icon(
-                                      FontAwesomeIcons.envelope,
+                                      FontAwesomeIcons.user,
                                       color: Colors.black,
                                       size: 22.0,
                                     ),
-                                    hintText: "Enter email",
+                                    hintText: "Enter Username",
                                     hintStyle: TextStyle(
                                         fontFamily: "SignikaSemiBold",
                                         fontSize: 18.0)),
@@ -158,7 +151,6 @@ class SignUpState extends State<SignUp> {
                                   right: 25.0),
                               child: TextFormField(
                                 obscureText: _obscureText,
-                                focusNode: focusPassword,
                                 controller: passwordController,
                                 validator: (value) {
                                   RegExp regex = new RegExp(r'^.{6,}$');
@@ -197,42 +189,37 @@ class SignUpState extends State<SignUp> {
                                         fontSize: 18.0)),
                               ),
                             ),
+                            
                             Container(
                               width: 250.0,
                               height: 1.0,
                               color: Colors.grey,
                             ),
                             Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                   top: 20.0,
                                   bottom: 20.0,
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
-                                obscureText: _obscureText,
-                                focusNode: focusConfirmPassword,
-                                controller: confirmPasswordController,
-                                validator: (value) {
-                                  if (passwordController.text != value) {
-                                    return ('Password không trùng khớp');
-                                  }
-                                  return null;
-                                },
+                                controller: emailController,
+                                
                                 onSaved: (value) {
-                                  confirmPasswordController.text = value!;
+                                  emailController.text = value!;
                                 },
-                                style: TextStyle(
+                                keyboardType: TextInputType.emailAddress,
+                                style: const TextStyle(
                                     fontFamily: "SignikaSemiBold",
                                     fontSize: 16.0,
                                     color: Colors.black),
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                     border: InputBorder.none,
                                     icon: Icon(
-                                      FontAwesomeIcons.lock,
+                                      FontAwesomeIcons.envelope,
                                       color: Colors.black,
                                       size: 22.0,
                                     ),
-                                    hintText: "Confirm password",
+                                    hintText: "Enter email",
                                     hintStyle: TextStyle(
                                         fontFamily: "SignikaSemiBold",
                                         fontSize: 18.0)),
@@ -243,8 +230,39 @@ class SignUpState extends State<SignUp> {
                               height: 1.0,
                               color: Colors.grey,
                             ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 20.0,
+                                  bottom: 20.0,
+                                  left: 25.0,
+                                  right: 25.0),
+                              child: TextFormField(
+                 
+                                controller: phoneController,
+                                
+                                onSaved: (value) {
+                                  phoneController.text = value!;
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                style: const TextStyle(
+                                    fontFamily: "SignikaSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    icon: Icon(
+                                      FontAwesomeIcons.phone,
+                                      color: Colors.black,
+                                      size: 22.0,
+                                    ),
+                                    hintText: "Enter phone",
+                                    hintStyle: TextStyle(
+                                        fontFamily: "SignikaSemiBold",
+                                        fontSize: 18.0)),
+                              ),
+                            ),
+                            
                             Container(
-                              margin: const EdgeInsets.only(top: 40.0),
                               decoration: const BoxDecoration(
                                   borderRadius:
                                   BorderRadius.all(Radius.circular(5.0)),
@@ -282,11 +300,26 @@ class SignUpState extends State<SignUp> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  signUp(emailController.text,
-                                      passwordController.text);
+                                  API(
+                                  url: "http://10.0.2.2:8000/doan/api/dang_ki.php/?name=" +
+                                      nameController.text +
+                                      "&username=" +
+                                      usernameController.text +"&password=" +
+                                      passwordController.text +"&email=" +
+                                      emailController.text +"&phone=" +
+                                      phoneController.text)
+                                  .getDataString()
+                                  .then((value) {
+                                     s=json.decode(value);
+                                     
+                                  });
+                                  Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) => Login()));
+                                    setState(() {
+                                    });
                                 },
                               ),
-                            )
+                            ),
                           ],
                         ),
                       ),
@@ -297,70 +330,5 @@ class SignUpState extends State<SignUp> {
             ),
           ),
         ));
-  }
-
-  void signUp(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        await _auth
-            .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e.message);
-        });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMessage = "Your email address appears to be malformed.";
-            break;
-
-          case "wrong-password":
-            errorMessage = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMessage = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            break;
-
-          default:
-            errorMessage = "Vui lòng kiểm tra lại thông tin.";
-        }
-        Fluttertoast.showToast(msg: errorMessage!);
-        print(error.code);
-      }
-    }
-  }
-
-  postDetailsToFirestore() async {
-    // calling our firestore
-    // calling our user model
-    // sedning these values
-
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User user = _auth.currentUser!;
-
-    UserModel userModel = UserModel();
-
-    // writing all the values
-    userModel.uid = user.uid;
-    userModel.email = user.email;
-    userModel.name = nameController.text;
-
-    await firebaseFirestore
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Đăng kí thành công :) ");
-
-    Navigator.pushAndRemoveUntil((context),
-        MaterialPageRoute(builder: (context) => Login()), (route) => false);
   }
 }
