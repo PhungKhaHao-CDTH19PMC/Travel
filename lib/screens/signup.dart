@@ -25,9 +25,13 @@ class SignUpState extends State<SignUp> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
+<<<<<<< HEAD
   TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+=======
+      TextEditingController();
+>>>>>>> 3d8cb526596904ffcb84177a7849de6c001f1dbe
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool _hidepassword = false;
@@ -115,8 +119,24 @@ class SignUpState extends State<SignUp> {
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
+<<<<<<< HEAD
                                 controller: usernameController,
                                 
+=======
+                                focusNode: focusEmail,
+                                controller: emailController,
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return ('Vui lòng nhập email');
+                                  }
+                                  if (!RegExp(
+                                          '^[a-zA-Z0-9+_.-]+@[a-zA-z0-9.-]+.[a-z]')
+                                      .hasMatch(value)) {
+                                    return ('Nhập email đúng định dạng');
+                                  }
+                                  return null;
+                                },
+>>>>>>> 3d8cb526596904ffcb84177a7849de6c001f1dbe
                                 onSaved: (value) {
                                   usernameController.text = value!;
                                 },
@@ -265,7 +285,7 @@ class SignUpState extends State<SignUp> {
                             Container(
                               decoration: const BoxDecoration(
                                   borderRadius:
-                                  BorderRadius.all(Radius.circular(5.0)),
+                                      BorderRadius.all(Radius.circular(5.0)),
                                   boxShadow: <BoxShadow>[
                                     BoxShadow(
                                         color: AppColours.colorStart,
