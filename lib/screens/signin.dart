@@ -225,7 +225,7 @@ class LoginState extends State<Login> {
                                       c="";
                                       });
                                        Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) => ViewPage()));
+                                          MaterialPageRoute(builder: (context) => ViewPage(username: s.elementAt(0)["id"].toString(),)));
                                      }
                                     
                                   });

@@ -6,8 +6,9 @@ import 'package:travel/screens/place.dart';
 import 'package:travel/screens/profile.dart';
 
 class ViewPage extends StatelessWidget {
-  const ViewPage({Key? key}) : super(key: key);
-
+  
+  final String username;
+  ViewPage({Key? key ,required this.username}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,8 +20,8 @@ class ViewPage extends StatelessWidget {
           body: TabBarView(
             children: [
               HomePage(),
-              MyGridScreen(),
-              Container(child: Icon(Icons.directions_bike)),
+              MyGridScreen(username: username,),
+              Container(child: Column(children: [Text(username)],)),
               Profile(),
             ],
           ),

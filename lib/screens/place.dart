@@ -4,7 +4,8 @@ import 'package:map_launcher/map_launcher.dart';
 import 'api.dart';
 
 class MyGridScreen extends StatefulWidget {
-  MyGridScreen({Key? key}) : super(key: key);
+  String username;
+  MyGridScreen({Key? key, required this.username}) : super(key: key);
 
   @override
   _MyGridScreenState createState() => _MyGridScreenState();
@@ -20,10 +21,73 @@ class _MyGridScreenState extends State<MyGridScreen> {
       title: "Local",
     );
   }
-
+  
   @override
+  Widget Share(int index) {
+      TextEditingController _feeling = TextEditingController();
+      TextEditingController _imagepath = TextEditingController();
+      String them = "";
+      return Scaffold(
+        appBar: AppBar(
+          title: Text('Nội dung bài chia sẽ'),
+        ),
+        body: Container(
+          padding: EdgeInsets.all(30),
+          child: ListView(
+            children: <Widget>[
+              
+              Container(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+                child: TextField(
+                    controller: _feeling,
+                    decoration: InputDecoration(
+                      hintText: 'feeling',
+                      border: OutlineInputBorder(),
+                    )),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+                child: TextField(
+                    controller: _imagepath,
+                    obscureText: false,
+                    decoration: InputDecoration(
+                      hintText: 'imagepath',
+                      border: OutlineInputBorder(),
+                    )),
+              ),
+              OutlinedButton(
+                child: Text('share'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.cyan[400],
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                ),
+                onPressed: () {
+                    API(
+                          url: "http://10.0.2.2:8000/doan/api/chia_se.php/?nguoi_dung_id=" +
+                              widget.username +
+                              "&dia_danh_id=" +
+                              s.elementAt(index)["id"].toString() +"&feeling=" +
+                              _feeling.text+"&imagepath=" +_imagepath.text)
+                      .getDataString()
+                      .then((value) {
+                    them = value;
+                    print(value);
+                    isUpdate = false;
+                  });
+                  Navigator.pop(context);
+                setState(() {
+
+                });
+                }
+              ),
+            ],
+          ),
+        ),
+      );
+    }
   Widget build(BuildContext context) {
-    API(url: "http://10.0.2.2/dictionary/api/lay_dia_danh.php")
+    API(url: "http://10.0.2.2:8000/doan/api/lay_dia_danh.php")
         .getDataString()
         .then((value) {
       s = json.decode(value);
@@ -42,7 +106,7 @@ class _MyGridScreenState extends State<MyGridScreen> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: Text(s.elementAt(index)["name"].toString()),
+                      title: Text(widget.username),
                       trailing: Icon(Icons.favorite_outline),
                     ),
                     Container(
@@ -60,15 +124,20 @@ class _MyGridScreenState extends State<MyGridScreen> {
                     ButtonBar(
                       children: [
                         TextButton(
-                          child: const Text('CONTACT AGENT'),
+                          child: const Text('LOCATION'),
                           onPressed: () {
                             local(double.parse(s.elementAt(index)["location1"]),
                                 double.parse(s.elementAt(index)["location2"]));
                           },
                         ),
                         TextButton(
-                          child: const Text('LEARN MORE'),
-                          onPressed: () {/* ... */},
+                          child: const Text('SHARE'),
+                          onPressed: () {
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                            builder: (context) =>  Share(index)));
+                          },
                         )
                       ],
                     )
