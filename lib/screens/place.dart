@@ -23,7 +23,7 @@ class _MyGridScreenState extends State<MyGridScreen> {
 
   @override
   Widget build(BuildContext context) {
-    API(url: "http://10.0.2.2/dictionary/api/lay_dia_danh.php")
+    API(url: "http://10.0.2.2/travel/api/lay_dia_danh.php")
         .getDataString()
         .then((value) {
       s = json.decode(value);

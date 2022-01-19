@@ -20,7 +20,6 @@ class Login extends StatefulWidget {
 }
 
 class LoginState extends State<Login> {
-
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -30,12 +29,11 @@ class LoginState extends State<Login> {
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
   Iterable s = [];
-  String a='';
-  String b='';
-  String c='';    
+  String a = '';
+  String b = '';
+  String c = '';
   String? errorMessage;
   @override
-
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -209,34 +207,43 @@ class LoginState extends State<Login> {
                                 ),
                                 onPressed: () {
                                   API(
-                                  url: "http://10.0.2.2:8000/doan/api/dang_nhap.php/?username=" +
-                                      usernameController.text +
-                                      "&password=" +
-                                      passwordController.text)
-                                  .getDataString()
-                                  .then((value) {
-                                    s=json.decode(value);
-                                     a=s.elementAt(0)["username"].toString();
-                                     b=s.elementAt(0)["password"].toString();
+                                          url:
+                                              "http://10.0.2.2/travel/api/dang_nhap.php/?username=" +
+                                                  usernameController.text +
+                                                  "&password=" +
+                                                  passwordController.text)
+                                      .getDataString()
+                                      .then((value) {
+                                    s = json.decode(value);
+                                    a = s.elementAt(0)["username"].toString();
+                                    b = s.elementAt(0)["password"].toString();
 
-                                     if(a==usernameController.text && b==passwordController.text)
-                                     {
-                                       setState(() {
-                                      c="";
+                                    if (a == usernameController.text &&
+                                        b == passwordController.text) {
+                                      setState(() {
+                                        c = "";
                                       });
-                                       Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) => ViewPage()));
-                                     }
-                                    
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ViewPage()));
+                                    }
                                   });
                                   setState(() {
-                                      c="Login fail";
-                                      });
+                                    c = "Login fail";
+                                  });
                                 },
                               ),
                             ),
                             Container(
-                                child: Text(c,style: TextStyle(fontWeight: FontWeight.bold,color: Colors.red, fontSize:20),),
+                              child: Text(
+                                c,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                    fontSize: 20),
+                              ),
                             ),
                             Container(
                               child: FlatButton(
@@ -251,7 +258,6 @@ class LoginState extends State<Login> {
                                 onPressed: () {},
                               ),
                             ),
-                            
                           ],
                         ),
                       ),
@@ -429,9 +435,5 @@ class LoginState extends State<Login> {
         ),
       ),
     );
-    
   }
-  
 }
-
-

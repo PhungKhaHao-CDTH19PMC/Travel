@@ -19,26 +19,20 @@ class SignUp extends StatefulWidget {
 }
 
 class SignUpState extends State<SignUp> {
-
-
   final TextEditingController nameController = TextEditingController();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
-<<<<<<< HEAD
-  TextEditingController();
+      TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-=======
-      TextEditingController();
->>>>>>> 3d8cb526596904ffcb84177a7849de6c001f1dbe
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool _hidepassword = false;
   bool _obscureText = true;
   String? errorMessage;
-  String msg='';
-    Iterable s = [];
+  String msg = '';
+  Iterable s = [];
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -119,24 +113,7 @@ class SignUpState extends State<SignUp> {
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
-<<<<<<< HEAD
                                 controller: usernameController,
-                                
-=======
-                                focusNode: focusEmail,
-                                controller: emailController,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return ('Vui lòng nhập email');
-                                  }
-                                  if (!RegExp(
-                                          '^[a-zA-Z0-9+_.-]+@[a-zA-z0-9.-]+.[a-z]')
-                                      .hasMatch(value)) {
-                                    return ('Nhập email đúng định dạng');
-                                  }
-                                  return null;
-                                },
->>>>>>> 3d8cb526596904ffcb84177a7849de6c001f1dbe
                                 onSaved: (value) {
                                   usernameController.text = value!;
                                 },
@@ -209,7 +186,6 @@ class SignUpState extends State<SignUp> {
                                         fontSize: 18.0)),
                               ),
                             ),
-                            
                             Container(
                               width: 250.0,
                               height: 1.0,
@@ -223,7 +199,6 @@ class SignUpState extends State<SignUp> {
                                   right: 25.0),
                               child: TextFormField(
                                 controller: emailController,
-                                
                                 onSaved: (value) {
                                   emailController.text = value!;
                                 },
@@ -257,9 +232,7 @@ class SignUpState extends State<SignUp> {
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
-                 
                                 controller: phoneController,
-                                
                                 onSaved: (value) {
                                   phoneController.text = value!;
                                 },
@@ -281,7 +254,6 @@ class SignUpState extends State<SignUp> {
                                         fontSize: 18.0)),
                               ),
                             ),
-                            
                             Container(
                               decoration: const BoxDecoration(
                                   borderRadius:
@@ -321,22 +293,26 @@ class SignUpState extends State<SignUp> {
                                 ),
                                 onPressed: () {
                                   API(
-                                  url: "http://10.0.2.2:8000/doan/api/dang_ki.php/?name=" +
-                                      nameController.text +
-                                      "&username=" +
-                                      usernameController.text +"&password=" +
-                                      passwordController.text +"&email=" +
-                                      emailController.text +"&phone=" +
-                                      phoneController.text)
-                                  .getDataString()
-                                  .then((value) {
-                                     s=json.decode(value);
-                                     
+                                          url:
+                                              "http://10.0.2.2/travel/api/dang_ki.php/?name=" +
+                                                  nameController.text +
+                                                  "&username=" +
+                                                  usernameController.text +
+                                                  "&password=" +
+                                                  passwordController.text +
+                                                  "&email=" +
+                                                  emailController.text +
+                                                  "&phone=" +
+                                                  phoneController.text)
+                                      .getDataString()
+                                      .then((value) {
+                                    s = json.decode(value);
                                   });
-                                  Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) => Login()));
-                                    setState(() {
-                                    });
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Login()));
+                                  setState(() {});
                                 },
                               ),
                             ),
