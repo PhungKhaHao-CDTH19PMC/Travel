@@ -1,296 +1,165 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:map_launcher/map_launcher.dart';
+import 'api.dart';
 
 class HomePage extends StatefulWidget {
+  String username;
+  HomePage({Key? key, required this.username}) : super(key: key);
+
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePage createState() => _HomePage();
 }
 
-class _HomePageState extends State<HomePage> {
-  //Let's add the color code for our project
-  Color bgBlack = Color(0xFF1a1a1a);
-  Color mainBlack = Color(0xFF262626);
-  Color fbBlue = Color(0xFF2D88FF);
-  Color mainGrey = Color(0xFF505050);
+class _HomePage extends State<HomePage> {
+  Iterable s = [];
+  Iterable u = [];
 
-  //Here I'm going to import a list of images that we will use for the profile picture and the storys
-  List<String> avatarUrl = [
-    "https://images.unsplash.com/photo-1518806118471-f28b20a1d79d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80",
-    "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
-    "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=80",
-    "https://images.unsplash.com/photo-1525879000488-bff3b1c387cf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80",
-  ];
-  List<String> storyUrl = [
-    "https://images.unsplash.com/photo-1600055882386-5d18b02a0d51?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=621&q=80",
-    "https://images.unsplash.com/photo-1600174297956-c6d4d9998f14?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80",
-    "https://images.unsplash.com/photo-1600008646149-eb8835bd979d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=666&q=80",
-    "https://images.unsplash.com/photo-1502920313556-c0bbbcd00403?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=967&q=80",
-  ];
+  bool isUpdate = true;
+  Future<void> local(double a, double b) async {
+    final availableMap = await MapLauncher.installedMaps;
+    await availableMap.first.showMarker(
+      coords: Coords(a, b),
+      title: "Local",
+    );
+  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget Share(int index) {
+    TextEditingController _feeling = TextEditingController();
+    TextEditingController _imagepath = TextEditingController();
+    String them = "";
     return Scaffold(
-      //let's add the  bg color
-      backgroundColor: bgBlack,
-      //let's add the app bar
       appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: mainBlack,
-        title: Text(
-          "facebook",
-          style: TextStyle(
-            fontSize: 25,
-            color: fbBlue,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        //Now let's add the action button
+        title: Text('Nội dung bài chia sẽ'),
       ),
-
-      //Now let's work on the body
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              //First of all we need to creat the post editor
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: mainBlack,
-                  borderRadius: BorderRadius.circular(12.0),
+      body: Container(
+        padding: EdgeInsets.all(30),
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+              child: TextField(
+                  controller: _feeling,
+                  decoration: InputDecoration(
+                    hintText: 'feeling',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: TextField(
+                  controller: _imagepath,
+                  obscureText: false,
+                  decoration: InputDecoration(
+                    hintText: 'imagepath',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            OutlinedButton(
+                child: Text('share'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.cyan[400],
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 10.0),
+                onPressed: () {
+                  API(
+                          url:
+                              "http://10.0.2.2/doan/api/chia_se.php/?nguoi_dung_id=" +
+                                  widget.username +
+                                  "&dia_danh_id=" +
+                                  s.elementAt(index)["id"].toString() +
+                                  "&feeling=" +
+                                  _feeling.text +
+                                  "&imagepath=" +
+                                  _imagepath.text)
+                      .getDataString()
+                      .then((value) {
+                    them = value;
+                    print(value);
+                    isUpdate = false;
+                  });
+                  Navigator.pop(context);
+                  setState(() {});
+                }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget build(BuildContext context) {
+    API(url: "http://10.0.2.2/doan/api/lay_tat_ca_chia_se.php")
+        .getDataString()
+        .then((value) {
+      s = json.decode(value);
+      isUpdate = false;
+      setState(() {});
+    });
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Trang Chủ'),
+      ),
+      body: Container(
+        padding: const EdgeInsets.only(top: 20),
+        child: SizedBox(
+          child: Expanded(
+            child: ListView.builder(
+              itemCount: s.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Card(
+                  elevation: 4.0,
                   child: Column(
                     children: [
-                      Row(
+                      ListTile(
+                        title: Text(s.elementAt(index)["fullname"].toString()),
+                        trailing: Icon(Icons.favorite_outline),
+                      ),
+                      Container(
+                        height: 200.0,
+                        child: Ink.image(
+                          image: NetworkImage(
+                              s.elementAt(index)["image"].toString()),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(16.0),
+                        alignment: Alignment.centerLeft,
+                        child: Text(s.elementAt(index)["feeling"].toString()),
+                      ),
+                      ButtonBar(
                         children: [
-                          CircleAvatar(
-                            radius: 25.0,
-                            backgroundImage: NetworkImage(avatarUrl[0]),
+                          TextButton(
+                            child: const Text('LOCATION'),
+                            onPressed: () {
+                              local(
+                                  double.parse(s.elementAt(index)["location1"]),
+                                  double.parse(
+                                      s.elementAt(index)["location2"]));
+                            },
                           ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Expanded(
-                            child: TextField(
-                              style: TextStyle(
-                                color: Colors.white,
-                              ),
-                              decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.only(left: 25.0),
-                                  hintText: "Post something...",
-                                  hintStyle: TextStyle(color: Colors.white),
-                                  filled: true,
-                                  fillColor: mainGrey,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    borderSide: BorderSide.none,
-                                  )),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 5.0,
-                      ),
-                      Divider(
-                        color: mainGrey,
-                        thickness: 1.5,
-                      ),
-                      //Now we will create a Row of three button
-                      Row(
-                        children: [
-                          actionButton(
-                              Icons.live_tv, "Live", Color(0xFFF23E5C)),
-                          actionButton(
-                              Icons.image, "Picture", Color(0xFF58C472)),
-                          actionButton(Icons.insert_emoticon, "Activity",
-                              Color(0xFFF8C03E)),
+                          TextButton(
+                            child: const Text('SHARE'),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Share(index)));
+                            },
+                          )
                         ],
                       )
                     ],
                   ),
-                ),
-              ),
-              //We have finished the Post editor now let's create
-              //the story's timeline
-              // let's first create a new file for the custom widget
-              //now let's buil the container
-              SizedBox(
-                height: 10.0,
-              ),
-              Container(
-                height: 160.0,
-                width: double.infinity,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    storyTile(avatarUrl[0], storyUrl[0], "Ling chang"),
-                    storyTile(avatarUrl[1], storyUrl[1], "Ling chang"),
-                    storyTile(avatarUrl[2], storyUrl[2], "Ling chang"),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              //Now let's create the news feed
-              //first we will make the custom container of the feed
-              //Ok let's test our widget
-              feedBox(avatarUrl[0], "Doctor code", "6 min",
-                  "I just wrote something", ""),
-              feedBox(avatarUrl[1], "Joseph Joestar", "6 min",
-                  "It's pretty good I like it", storyUrl[2]),
-              feedBox(avatarUrl[2], "Giorno giovana", "Yesterday",
-                  "I'm Giorno Giovana and I have a Dream", storyUrl[1]),
-            ],
+                );
+              },
+            ),
           ),
         ),
       ),
     );
   }
-}
-
-Widget storyTile(String avatarUrl, String storyUrl, String userName) {
-  return Container(
-    margin: EdgeInsets.only(right: 20.0),
-    height: 144.0,
-    width: 120.0,
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        image: DecorationImage(
-          image: NetworkImage(storyUrl),
-          fit: BoxFit.cover,
-        )),
-    child: Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(avatarUrl),
-          ),
-          Expanded(
-            child: Container(),
-          ),
-          Text(
-            userName,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-              fontSize: 18.0,
-            ),
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-Widget feedBox(String avatarUrl, String userName, String date,
-    String contentText, String contentImg) {
-  return Container(
-    margin: EdgeInsets.only(bottom: 20.0),
-    width: double.infinity,
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(12.0),
-      color: Color(0xFF262626),
-    ),
-    child: Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(avatarUrl),
-                radius: 25.0,
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userName,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      date,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          if (contentText != "")
-            Text(
-              contentText,
-              style: TextStyle(color: Colors.white, fontSize: 16.0),
-            ),
-          SizedBox(
-            height: 10.0,
-          ),
-          if (contentImg != "") Image.network(contentImg),
-          SizedBox(
-            height: 10.0,
-          ),
-          Divider(
-            thickness: 1.5,
-            color: Color(0xFF505050),
-          ),
-          Row(
-            children: [
-              actionButton(Icons.thumb_up, "Like", Color(0xFF505050)),
-              actionButton(Icons.comment, "Reply", Color(0xFF505050)),
-              actionButton(Icons.share, "Share", Color(0xFF505050)),
-            ],
-          )
-        ],
-      ),
-    ),
-  );
-}
-
-Widget actionButton(IconData icon, String actionTitle, Color iconColor) {
-  return Expanded(
-    child: FlatButton.icon(
-      onPressed: () {},
-      icon: Icon(
-        icon,
-        color: iconColor,
-      ),
-      label: Text(
-        actionTitle,
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-    ),
-  );
 }

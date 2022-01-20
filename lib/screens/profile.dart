@@ -1,8 +1,33 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'api.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  String username;
+  Profile({Key? key, required this.username}) : super(key: key);
+
+  @override
+  _ProfileState createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  Iterable s = [];
+  int index = 0;
+  bool isUpdate = true;
   @override
   Widget build(BuildContext context) {
+    if (isUpdate == true) {
+      API(
+              url:
+                  "http://10.0.2.2/doan/api/lay_thong_tin_nguoi_dung.php/?id=" +
+                      widget.username)
+          .getDataString()
+          .then((value) {
+        s = json.decode(value);
+        isUpdate = false;
+        setState(() {});
+      });
+    }
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -31,7 +56,7 @@ class Profile extends StatelessWidget {
                         height: 10.0,
                       ),
                       Text(
-                        "Khả Hào",
+                        widget.username,
                         style: TextStyle(
                           fontSize: 22.0,
                           color: Colors.white,
@@ -139,19 +164,15 @@ class Profile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(
-                    "Bio:",
-                    style: TextStyle(
-                        color: Colors.redAccent,
-                        fontStyle: FontStyle.normal,
-                        fontSize: 28.0),
-                  ),
                   SizedBox(
                     height: 10.0,
                   ),
                   Text(
-                    'My name is Hao and I am  a freelance mobile app developper.\n'
-                    'if you need any mobile app for your company then contact me for more informations',
+                    'Phone:' +
+                        s.elementAt(0)["phone"].toString() +
+                        '\n'
+                            'Email' +
+                        s.elementAt(0)["email"].toString(),
                     style: TextStyle(
                       fontSize: 22.0,
                       fontStyle: FontStyle.italic,

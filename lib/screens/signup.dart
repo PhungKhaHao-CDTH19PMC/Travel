@@ -294,7 +294,7 @@ class SignUpState extends State<SignUp> {
                                 onPressed: () {
                                   API(
                                           url:
-                                              "http://10.0.2.2/travel/api/dang_ki.php/?name=" +
+                                              "http://10.0.2.2/doan/api/dang_ki.php/?name=" +
                                                   nameController.text +
                                                   "&username=" +
                                                   usernameController.text +

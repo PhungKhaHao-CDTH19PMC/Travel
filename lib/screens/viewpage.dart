@@ -4,10 +4,11 @@ import 'package:travel/screens/home.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:travel/screens/place.dart';
 import 'package:travel/screens/profile.dart';
+import 'package:travel/screens/share.dart';
 
 class ViewPage extends StatelessWidget {
-  const ViewPage({Key? key}) : super(key: key);
-
+  final String username;
+  ViewPage({Key? key, required this.username}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -18,10 +19,14 @@ class ViewPage extends StatelessWidget {
           bottomNavigationBar: menu(),
           body: TabBarView(
             children: [
-              HomePage(),
-              MyGridScreen(),
-              Container(child: Icon(Icons.directions_bike)),
-              Profile(),
+              HomePage(username: username),
+              MyGridScreen(
+                username: username,
+              ),
+              Share(username: username),
+              Profile(
+                username: username,
+              ),
             ],
           ),
         ),
@@ -42,10 +47,10 @@ Widget menu() {
       tabs: [
         Tab(icon: Icon(Icons.home)),
         Tab(
-          icon: Icon(FontAwesomeIcons.route),
+          icon: Icon(FontAwesomeIcons.paperPlane),
         ),
         Tab(
-          icon: Icon(FontAwesomeIcons.bell),
+          icon: Icon(FontAwesomeIcons.share),
         ),
         Tab(
           icon: Icon(FontAwesomeIcons.user),

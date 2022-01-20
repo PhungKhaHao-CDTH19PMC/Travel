@@ -208,7 +208,7 @@ class LoginState extends State<Login> {
                                 onPressed: () {
                                   API(
                                           url:
-                                              "http://10.0.2.2/travel/api/dang_nhap.php/?username=" +
+                                              "http://10.0.2.2/doan/api/dang_nhap.php/?username=" +
                                                   usernameController.text +
                                                   "&password=" +
                                                   passwordController.text)
@@ -226,8 +226,11 @@ class LoginState extends State<Login> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ViewPage()));
+                                              builder: (context) => ViewPage(
+                                                    username: s
+                                                        .elementAt(0)["id"]
+                                                        .toString(),
+                                                  )));
                                     }
                                   });
                                   setState(() {

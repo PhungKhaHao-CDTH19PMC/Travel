@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'api.dart';
 
-class MyGridScreen extends StatefulWidget {
+class Share extends StatefulWidget {
   String username;
-  MyGridScreen({Key? key, required this.username}) : super(key: key);
+  Share({Key? key, required this.username}) : super(key: key);
 
   @override
-  _MyGridScreenState createState() => _MyGridScreenState();
+  _Share createState() => _Share();
 }
 
-class _MyGridScreenState extends State<MyGridScreen> {
+class _Share extends State<Share> {
   Iterable s = [];
   bool isUpdate = true;
   Future<void> local(double a, double b) async {
@@ -88,7 +88,9 @@ class _MyGridScreenState extends State<MyGridScreen> {
   }
 
   Widget build(BuildContext context) {
-    API(url: "http://10.0.2.2/doan/api/lay_dia_danh.php")
+    API(
+            url: "http://10.0.2.2/doan/api/bai_chia_se.php/?nguoi_dung_id=" +
+                widget.username)
         .getDataString()
         .then((value) {
       s = json.decode(value);
@@ -97,7 +99,7 @@ class _MyGridScreenState extends State<MyGridScreen> {
     });
     return Scaffold(
       appBar: AppBar(
-        title: Text('Địa điểm hot'),
+        title: Text('Bài Chia Sẻ'),
       ),
       body: Container(
         padding: const EdgeInsets.only(top: 20),
@@ -118,15 +120,14 @@ class _MyGridScreenState extends State<MyGridScreen> {
                         height: 200.0,
                         child: Ink.image(
                           image: NetworkImage(
-                              s.elementAt(index)["imagepath"].toString()),
+                              s.elementAt(index)["image"].toString()),
                           fit: BoxFit.cover,
                         ),
                       ),
                       Container(
                         padding: EdgeInsets.all(16.0),
                         alignment: Alignment.centerLeft,
-                        child:
-                            Text(s.elementAt(index)["description"].toString()),
+                        child: Text(s.elementAt(index)["feeling"].toString()),
                       ),
                       ButtonBar(
                         children: [
@@ -160,47 +161,4 @@ class _MyGridScreenState extends State<MyGridScreen> {
       ),
     );
   }
-}
-
-Card buildCard() {
-  var heading = '\Biển Vũng Tàu';
-  var subheading = 'Nước xanh tươi';
-  var cardImage = AssetImage('assets/images/beach.jpg');
-  var supportingText =
-      'Một trong những bãi biển đẹp nhất Việt Nam.Nước trong xanh mát mẻ.';
-  return Card(
-      elevation: 4.0,
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(heading),
-            subtitle: Text(subheading),
-            trailing: Icon(Icons.favorite_outline),
-          ),
-          Container(
-            height: 200.0,
-            child: Ink.image(
-              image: cardImage,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16.0),
-            alignment: Alignment.centerLeft,
-            child: Text(supportingText),
-          ),
-          ButtonBar(
-            children: [
-              TextButton(
-                child: const Text('CONTACT AGENT'),
-                onPressed: () {/* ... */},
-              ),
-              TextButton(
-                child: const Text('LEARN MORE'),
-                onPressed: () {/* ... */},
-              )
-            ],
-          )
-        ],
-      ));
 }
