@@ -13,7 +13,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePage extends State<HomePage> {
   Iterable s = [];
-  Iterable u = [];
 
   bool isUpdate = true;
   Future<void> local(double a, double b) async {
@@ -26,71 +25,45 @@ class _HomePage extends State<HomePage> {
 
   @override
   Widget Share(int index) {
-    TextEditingController _feeling = TextEditingController();
-    TextEditingController _imagepath = TextEditingController();
-    String them = "";
     return Scaffold(
       appBar: AppBar(
-        title: Text('Nội dung bài chia sẽ'),
+        title: Text('Chi tiết bài viết'),
       ),
       body: Container(
-        padding: EdgeInsets.all(30),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-              child: TextField(
-                  controller: _feeling,
-                  decoration: InputDecoration(
-                    hintText: 'feeling',
-                    border: OutlineInputBorder(),
-                  )),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-              child: TextField(
-                  controller: _imagepath,
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    hintText: 'imagepath',
-                    border: OutlineInputBorder(),
-                  )),
-            ),
-            OutlinedButton(
-                child: Text('share'),
-                style: OutlinedButton.styleFrom(
-                  primary: Colors.cyan[400],
-                  shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
-                ),
-                onPressed: () {
-                  API(
-                          url:
-                              "http://10.0.2.2/doan/api/chia_se.php/?nguoi_dung_id=" +
-                                  widget.username +
-                                  "&dia_danh_id=" +
-                                  s.elementAt(index)["id"].toString() +
-                                  "&feeling=" +
-                                  _feeling.text +
-                                  "&imagepath=" +
-                                  _imagepath.text)
-                      .getDataString()
-                      .then((value) {
-                    them = value;
-                    print(value);
-                    isUpdate = false;
-                  });
-                  Navigator.pop(context);
-                  setState(() {});
-                }),
-          ],
+        padding: const EdgeInsets.only(top: 20),
+        child: SizedBox(
+          child: Card(
+                  elevation: 4.0,
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Text(s.length > 0 ? ('Name: '+s.elementAt(index)["name"].toString()) : 'fail!', style:TextStyle(fontWeight: FontWeight.bold)),
+                        trailing: Icon(Icons.favorite_outline),
+                      ),
+                      Container(
+                        height: 200.0,
+                        child: Ink.image(
+                          image: NetworkImage(s.length > 0 ? s.elementAt(index)["imagepath"].toString():'https://bizflyportal.mediacdn.vn/bizflyportal/459/347/2020/06/02/17/37/70515910726734841.jpg'
+                             ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(16.0),
+                        alignment: Alignment.centerLeft,
+                        child: Text(s.length > 0 ? ('Description: '+s.elementAt(index)["description"].toString()) : 'fail!'),
+                      ),
+
+                    ],
         ),
       ),
+        )
+      )
     );
   }
 
   Widget build(BuildContext context) {
-    API(url: "http://10.0.2.2/doan/api/lay_tat_ca_chia_se.php")
+    API(url: "http://10.0.2.2:8000/doan/api/lay_tat_ca_chia_se.php")
         .getDataString()
         .then((value) {
       s = json.decode(value);
@@ -114,7 +87,7 @@ class _HomePage extends State<HomePage> {
                   child: Column(
                     children: [
                       ListTile(
-                        title: Text(s.elementAt(index)["fullname"].toString()),
+                        title: Text('User: '+s.elementAt(index)["fullname"].toString(), style:TextStyle(fontWeight: FontWeight.bold)),
                         trailing: Icon(Icons.favorite_outline),
                       ),
                       Container(
@@ -128,7 +101,7 @@ class _HomePage extends State<HomePage> {
                       Container(
                         padding: EdgeInsets.all(16.0),
                         alignment: Alignment.centerLeft,
-                        child: Text(s.elementAt(index)["feeling"].toString()),
+                        child: Text('Cảm nghĩ: '+s.elementAt(index)["feeling"].toString()),
                       ),
                       ButtonBar(
                         children: [
@@ -142,7 +115,7 @@ class _HomePage extends State<HomePage> {
                             },
                           ),
                           TextButton(
-                            child: const Text('SHARE'),
+                            child: const Text('DETAIL'),
                             onPressed: () {
                               Navigator.push(
                                   context,

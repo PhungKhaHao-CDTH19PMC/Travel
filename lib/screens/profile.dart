@@ -19,7 +19,7 @@ class _ProfileState extends State<Profile> {
     if (isUpdate == true) {
       API(
               url:
-                  "http://10.0.2.2/doan/api/lay_thong_tin_nguoi_dung.php/?id=" +
+                  "http://10.0.2.2:8000/doan/api/lay_thong_tin_nguoi_dung.php/?id=" +
                       widget.username)
           .getDataString()
           .then((value) {
@@ -56,10 +56,11 @@ class _ProfileState extends State<Profile> {
                         height: 10.0,
                       ),
                       Text(
-                        widget.username,
+                        s.length> 0?s.elementAt(0)["fullname"].toString(): 'fail!s',
                         style: TextStyle(
-                          fontSize: 22.0,
+                          fontSize: 25.0,
                           color: Colors.white,
+                         fontWeight: FontWeight.bold
                         ),
                       ),
                       SizedBox(
@@ -167,16 +168,16 @@ class _ProfileState extends State<Profile> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  Text(
-                    'Phone:' +
+                  Text(s.length> 0?'Phone: ' +
                         s.elementAt(0)["phone"].toString() +
                         '\n'
-                            'Email' +
-                        s.elementAt(0)["email"].toString(),
+                            'Email: ' +
+                        s.elementAt(0)["email"].toString():'fail!'
+                    ,
                     style: TextStyle(
                       fontSize: 22.0,
                       fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.bold,
                       color: Colors.black,
                       letterSpacing: 2.0,
                     ),
