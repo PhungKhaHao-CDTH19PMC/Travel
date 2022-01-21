@@ -208,7 +208,7 @@ class LoginState extends State<Login> {
                                 onPressed: () {
                                   API(
                                           url:
-                                              "http://10.0.2.2:8000/doan/api/dang_nhap.php/?username=" +
+                                              "http://10.0.2.2/doan/api/dang_nhap.php/?username=" +
                                                   usernameController.text +
                                                   "&password=" +
                                                   passwordController.text)
