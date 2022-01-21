@@ -14,9 +14,204 @@ class _ProfileState extends State<Profile> {
   Iterable s = [];
   int index = 0;
   bool isUpdate = true;
+  String c='';
+  String d='';
   @override
+
+  Widget Update() {
+    TextEditingController name = new TextEditingController(text: s.elementAt(0)["fullname"].toString());
+    TextEditingController email = new TextEditingController(text: s.elementAt(0)["email"].toString());
+    TextEditingController phone = new TextEditingController(text: s.elementAt(0)["phone"].toString());
+    String them = "";
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Chi tiết tài khoản'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(30),
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+              child: TextField(
+                  controller: name,
+                  decoration: InputDecoration(
+                    hintText: 'name',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: TextField(
+                  controller: phone,
+                  
+                  decoration: InputDecoration(
+                    hintText: 'phone',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: TextField(
+                  controller: email,
+                  
+                  decoration: InputDecoration(
+                    hintText: 'email',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            OutlinedButton(
+                child: Text('Update'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.cyan[400],
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                ),
+                onPressed: () {
+                  if(name.text==''||email.text==''||phone.text=='')
+                  {
+                    c='Vui lòng nhập đầy đủ thông tin';
+                  }
+                  
+                  else
+                  {
+                    c='';
+                    API(
+                          url:
+                              "http://10.0.2.2:8000/doan/api/cap_nhat_tai_khoan.php?name=" +
+                                  name.text +
+                                  "&email=" +
+                                  email.text+
+                                  "&phone=" +
+                                  phone.text+"&id=" +
+                                  s.elementAt(0)["id"].toString())
+                      .getDataString()
+                      .then((value) {
+                    them = value;
+                    print(value);
+                    isUpdate = false;
+                  });
+                  Navigator.pop(context);
+                  }
+                  setState(() {});
+                }),
+                OutlinedButton(
+                child: Text('Change Password'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.cyan[400],
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>  ChangePass()));
+                  setState(() {});
+                }),
+                Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(c),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget ChangePass() {
+    TextEditingController password = new TextEditingController();
+    TextEditingController newpassword = new TextEditingController();
+    TextEditingController confirnpassword = new TextEditingController();
+    String them = "";
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Chi tiết tài khoản'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(30),
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+              child: TextField(
+                  controller: password,
+                  decoration: InputDecoration(
+                    hintText: 'password',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: TextField(
+                  controller: newpassword,
+                  
+                  decoration: InputDecoration(
+                    hintText: 'newpassword',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: TextField(
+                  controller: confirnpassword,
+                  
+                  decoration: InputDecoration(
+                    hintText: 'confirnpassword',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            OutlinedButton(
+                child: Text('Update'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.cyan[400],
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                ),
+                onPressed: () {
+                  if(password.text==''||newpassword.text==''||confirnpassword.text=='')
+                  {
+                    d='Vui lòng nhập đầy đủ thông tin';
+                  }
+                  else if(password.text!=s.elementAt(0)["password"].toString())
+                  {
+                    d='Mật khẩu sai';
+                  }
+                  else if(confirnpassword.text!=newpassword.text)
+                  {
+                    d='Mật khẩu không trùng khớp';
+                  }
+                  else
+                  {
+                    d='';
+                    API(
+                          url:
+                              "http://10.0.2.2:8000/doan/api/cap_nhat_password.php?password=" +
+                                  newpassword.text +
+                                  "&id=" +
+                                  s.elementAt(0)["id"].toString())
+                      .getDataString()
+                      .then((value) {
+                    them = value;
+                    print(value);
+                    isUpdate = false;
+                  });
+                  Navigator.pop(context);
+                  }
+                  setState(() {});
+                }),
+                Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(d),
+            )
+          ],
+        ),
+      ),
+    );
+  }
   Widget build(BuildContext context) {
-    if (isUpdate == true) {
       API(
               url:
                   "http://10.0.2.2/doan/api/lay_thong_tin_nguoi_dung.php/?id=" +
@@ -27,7 +222,6 @@ class _ProfileState extends State<Profile> {
         isUpdate = false;
         setState(() {});
       });
-    }
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -195,7 +389,12 @@ class _ProfileState extends State<Profile> {
           Container(
             width: 300.00,
             child: RaisedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>  Update()));
+                },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),
                 elevation: 0.0,
@@ -213,7 +412,7 @@ class _ProfileState extends State<Profile> {
                         BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                     alignment: Alignment.center,
                     child: Text(
-                      "Contact me",
+                      "Update",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 26.0,

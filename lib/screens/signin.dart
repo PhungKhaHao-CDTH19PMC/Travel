@@ -102,7 +102,7 @@ class LoginState extends State<Login> {
                                       color: Colors.black,
                                       size: 22.0,
                                     ),
-                                    hintText: "Enter email",
+                                    hintText: "Enter username",
                                     hintStyle: TextStyle(
                                         fontFamily: "SignikaSemiBold",
                                         fontSize: 18.0)),
