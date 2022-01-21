@@ -15,6 +15,7 @@ class _ProfileState extends State<Profile> {
   int index = 0;
   bool isUpdate = true;
   String c='';
+  String d='';
   @override
 
   Widget Update() {
@@ -95,9 +96,115 @@ class _ProfileState extends State<Profile> {
                   }
                   setState(() {});
                 }),
+                OutlinedButton(
+                child: Text('Change Password'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.cyan[400],
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>  ChangePass()));
+                  setState(() {});
+                }),
                 Container(
               padding: EdgeInsets.only(top: 10),
               child: Text(c),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget ChangePass() {
+    TextEditingController password = new TextEditingController();
+    TextEditingController newpassword = new TextEditingController();
+    TextEditingController confirnpassword = new TextEditingController();
+    String them = "";
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Chi tiết tài khoản'),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(30),
+        child: ListView(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
+              child: TextField(
+                  controller: password,
+                  decoration: InputDecoration(
+                    hintText: 'password',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: TextField(
+                  controller: newpassword,
+                  
+                  decoration: InputDecoration(
+                    hintText: 'newpassword',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: TextField(
+                  controller: confirnpassword,
+                  
+                  decoration: InputDecoration(
+                    hintText: 'confirnpassword',
+                    border: OutlineInputBorder(),
+                  )),
+            ),
+            OutlinedButton(
+                child: Text('Update'),
+                style: OutlinedButton.styleFrom(
+                  primary: Colors.cyan[400],
+                  shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                ),
+                onPressed: () {
+                  if(password.text==''||newpassword.text==''||confirnpassword.text=='')
+                  {
+                    d='Vui lòng nhập đầy đủ thông tin';
+                  }
+                  else if(password.text!=s.elementAt(0)["password"].toString())
+                  {
+                    d='Mật khẩu sai';
+                  }
+                  else if(confirnpassword.text!=newpassword.text)
+                  {
+                    d='Mật khẩu không trùng khớp';
+                  }
+                  else
+                  {
+                    d='';
+                    API(
+                          url:
+                              "http://10.0.2.2:8000/doan/api/cap_nhat_password.php?password=" +
+                                  newpassword.text +
+                                  "&id=" +
+                                  s.elementAt(0)["id"].toString())
+                      .getDataString()
+                      .then((value) {
+                    them = value;
+                    print(value);
+                    isUpdate = false;
+                  });
+                  Navigator.pop(context);
+                  }
+                  setState(() {});
+                }),
+                Container(
+              padding: EdgeInsets.only(top: 10),
+              child: Text(d),
             )
           ],
         ),
