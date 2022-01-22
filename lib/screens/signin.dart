@@ -222,7 +222,7 @@ class LoginState extends State<Login> {
                                         b == passwordController.text) {
                                       setState(() {
                                         c = "";
-                                      });
+                                      
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -231,6 +231,7 @@ class LoginState extends State<Login> {
                                                         .elementAt(0)["id"]
                                                         .toString(),
                                                   )));
+                                                  });
                                     }
                                   });
                                   setState(() {
