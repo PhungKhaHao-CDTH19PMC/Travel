@@ -45,7 +45,7 @@ class SignUpState extends State<SignUp> {
         child: Form(
           key: _formKey,
           child: Container(
-            padding: EdgeInsets.only(top: 90.0),
+            padding: EdgeInsets.only(top: 38.0),
             child: ListView(
               children: <Widget>[
                 Stack(
@@ -59,25 +59,23 @@ class SignUpState extends State<SignUp> {
                           borderRadius: BorderRadius.circular(8.0)),
                       child: Container(
                         width: 360.00,
-                        height: 550.00,
+                        height: 600.00,
                         child: Column(
                           children: <Widget>[
                             Padding(
                               padding: EdgeInsets.only(
                                   top: 20.0,
-                                  bottom: 20.0,
+                                  bottom: 0,
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
                                 controller: nameController,
                                 validator: (value) {
                                   RegExp regex = new RegExp(r'^.{6,}$');
-                                  if (value!.isEmpty) {
+                                  if (value == '') {
                                     return ('Vui lòng nhập họ tên');
                                   }
-                                  if (!regex.hasMatch(value)) {
-                                    return ('Nhập họ tên ít nhất 6 kí tự');
-                                  }
+
                                   return null;
                                 },
                                 onSaved: (value) {
@@ -114,6 +112,13 @@ class SignUpState extends State<SignUp> {
                                   right: 25.0),
                               child: TextFormField(
                                 controller: usernameController,
+                                validator: (value) {
+                                  RegExp regex = new RegExp(r'^.{6,}$');
+                                  if (value == '') {
+                                    return ('Vui lòng nhập uername');
+                                  }
+                                  return null;
+                                },
                                 onSaved: (value) {
                                   usernameController.text = value!;
                                 },
@@ -143,7 +148,7 @@ class SignUpState extends State<SignUp> {
                             Padding(
                               padding: EdgeInsets.only(
                                   top: 20.0,
-                                  bottom: 20.0,
+                                  bottom: 0,
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
@@ -151,12 +156,10 @@ class SignUpState extends State<SignUp> {
                                 controller: passwordController,
                                 validator: (value) {
                                   RegExp regex = new RegExp(r'^.{6,}$');
-                                  if (value!.isEmpty) {
+                                  if (value == '') {
                                     return ('Vui lòng nhập password');
                                   }
-                                  if (!regex.hasMatch(value)) {
-                                    return ('Vui lòng nhập password ít nhất 6 kí tự');
-                                  }
+                                  return null;
                                 },
                                 style: TextStyle(
                                     fontFamily: "SignikaSemiBold",
@@ -194,11 +197,18 @@ class SignUpState extends State<SignUp> {
                             Padding(
                               padding: const EdgeInsets.only(
                                   top: 20.0,
-                                  bottom: 20.0,
+                                  bottom: 0,
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
                                 controller: emailController,
+                                validator: (value) {
+                                  RegExp regex = new RegExp(r'^.{6,}$');
+                                  if (value == '') {
+                                    return ('Vui lòng nhập email');
+                                  }
+                                  return null;
+                                },
                                 onSaved: (value) {
                                   emailController.text = value!;
                                 },
@@ -228,11 +238,18 @@ class SignUpState extends State<SignUp> {
                             Padding(
                               padding: const EdgeInsets.only(
                                   top: 20.0,
-                                  bottom: 20.0,
+                                  bottom: 20,
                                   left: 25.0,
                                   right: 25.0),
                               child: TextFormField(
                                 controller: phoneController,
+                                validator: (value) {
+                                  RegExp regex = new RegExp(r'^.{6,}$');
+                                  if (value == '') {
+                                    return ('Vui lòng nhập sđt');
+                                  }
+                                  return null;
+                                },
                                 onSaved: (value) {
                                   phoneController.text = value!;
                                 },
@@ -292,27 +309,40 @@ class SignUpState extends State<SignUp> {
                                   ),
                                 ),
                                 onPressed: () {
-                                  API(
-                                          url:
-                                              "http://10.0.2.2/doan/api/dang_ki.php/?name=" +
-                                                  nameController.text +
-                                                  "&username=" +
-                                                  usernameController.text +
-                                                  "&password=" +
-                                                  passwordController.text +
-                                                  "&email=" +
-                                                  emailController.text +
-                                                  "&phone=" +
-                                                  phoneController.text)
-                                      .getDataString()
-                                      .then((value) {
-                                    s = json.decode(value);
-                                  });
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Login()));
-                                  setState(() {});
+                                  if (nameController.text == '' ||
+                                      usernameController.text == '' ||
+                                      passwordController.text == '' ||
+                                      emailController.text == '' ||
+                                      phoneController.text == '') {
+                                    signUp(
+                                        nameController.text,
+                                        usernameController.text,
+                                        passwordController.text,
+                                        emailController.text,
+                                        phoneController.text);
+                                  } else {
+                                    API(
+                                            url:
+                                                "http://10.0.2.2/doan/api/dang_ki.php/?name=" +
+                                                    nameController.text +
+                                                    "&username=" +
+                                                    usernameController.text +
+                                                    "&password=" +
+                                                    passwordController.text +
+                                                    "&email=" +
+                                                    emailController.text +
+                                                    "&phone=" +
+                                                    phoneController.text)
+                                        .getDataString()
+                                        .then((value) {
+                                      s = json.decode(value);
+                                    });
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Login()));
+                                    setState(() {});
+                                  }
                                 },
                               ),
                             ),
@@ -326,5 +356,10 @@ class SignUpState extends State<SignUp> {
             ),
           ),
         ));
+  }
+
+  void signUp(String name, String username, String password, String email,
+      String phone) async {
+    if (_formKey.currentState!.validate()) {}
   }
 }
