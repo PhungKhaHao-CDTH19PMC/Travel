@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:travel/screens/signin.dart';
 import 'api.dart';
 
 class Profile extends StatefulWidget {
@@ -14,14 +15,16 @@ class _ProfileState extends State<Profile> {
   Iterable s = [];
   int index = 0;
   bool isUpdate = true;
-  String c='';
-  String d='';
+  String c = '';
+  String d = '';
   @override
-
   Widget Update() {
-    TextEditingController name = new TextEditingController(text: s.elementAt(0)["fullname"].toString());
-    TextEditingController email = new TextEditingController(text: s.elementAt(0)["email"].toString());
-    TextEditingController phone = new TextEditingController(text: s.elementAt(0)["phone"].toString());
+    TextEditingController name =
+        new TextEditingController(text: s.elementAt(0)["fullname"].toString());
+    TextEditingController email =
+        new TextEditingController(text: s.elementAt(0)["email"].toString());
+    TextEditingController phone =
+        new TextEditingController(text: s.elementAt(0)["phone"].toString());
     String them = "";
     return Scaffold(
       appBar: AppBar(
@@ -40,12 +43,10 @@ class _ProfileState extends State<Profile> {
                     border: OutlineInputBorder(),
                   )),
             ),
-            
             Container(
               padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: TextField(
                   controller: phone,
-                  
                   decoration: InputDecoration(
                     hintText: 'phone',
                     border: OutlineInputBorder(),
@@ -55,7 +56,6 @@ class _ProfileState extends State<Profile> {
               padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: TextField(
                   controller: email,
-                  
                   decoration: InputDecoration(
                     hintText: 'email',
                     border: OutlineInputBorder(),
@@ -69,34 +69,31 @@ class _ProfileState extends State<Profile> {
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                 ),
                 onPressed: () {
-                  if(name.text==''||email.text==''||phone.text=='')
-                  {
-                    c='Vui lòng nhập đầy đủ thông tin';
-                  }
-                  
-                  else
-                  {
-                    c='';
+                  if (name.text == '' || email.text == '' || phone.text == '') {
+                    c = 'Vui lòng nhập đầy đủ thông tin';
+                  } else {
+                    c = '';
                     API(
-                          url:
-                              "http://10.0.2.2:8000/doan/api/cap_nhat_tai_khoan.php?name=" +
-                                  name.text +
-                                  "&email=" +
-                                  email.text+
-                                  "&phone=" +
-                                  phone.text+"&id=" +
-                                  s.elementAt(0)["id"].toString())
-                      .getDataString()
-                      .then((value) {
-                    them = value;
-                    print(value);
-                    isUpdate = false;
-                  });
-                  Navigator.pop(context);
+                            url:
+                                "http://10.0.2.2:8000/doan/api/cap_nhat_tai_khoan.php?name=" +
+                                    name.text +
+                                    "&email=" +
+                                    email.text +
+                                    "&phone=" +
+                                    phone.text +
+                                    "&id=" +
+                                    s.elementAt(0)["id"].toString())
+                        .getDataString()
+                        .then((value) {
+                      them = value;
+                      print(value);
+                      isUpdate = false;
+                    });
+                    Navigator.pop(context);
                   }
                   setState(() {});
                 }),
-                OutlinedButton(
+            OutlinedButton(
                 child: Text('Change Password'),
                 style: OutlinedButton.styleFrom(
                   primary: Colors.cyan[400],
@@ -104,13 +101,11 @@ class _ProfileState extends State<Profile> {
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                 ),
                 onPressed: () {
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>  ChangePass()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ChangePass()));
                   setState(() {});
                 }),
-                Container(
+            Container(
               padding: EdgeInsets.only(top: 10),
               child: Text(c),
             )
@@ -142,12 +137,10 @@ class _ProfileState extends State<Profile> {
                     border: OutlineInputBorder(),
                   )),
             ),
-            
             Container(
               padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: TextField(
                   controller: newpassword,
-                  
                   decoration: InputDecoration(
                     hintText: 'newpassword',
                     border: OutlineInputBorder(),
@@ -157,7 +150,6 @@ class _ProfileState extends State<Profile> {
               padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: TextField(
                   controller: confirnpassword,
-                  
                   decoration: InputDecoration(
                     hintText: 'confirnpassword',
                     border: OutlineInputBorder(),
@@ -171,38 +163,34 @@ class _ProfileState extends State<Profile> {
                       borderRadius: BorderRadius.all(Radius.circular(15))),
                 ),
                 onPressed: () {
-                  if(password.text==''||newpassword.text==''||confirnpassword.text=='')
-                  {
-                    d='Vui lòng nhập đầy đủ thông tin';
-                  }
-                  else if(password.text!=s.elementAt(0)["password"].toString())
-                  {
-                    d='Mật khẩu sai';
-                  }
-                  else if(confirnpassword.text!=newpassword.text)
-                  {
-                    d='Mật khẩu không trùng khớp';
-                  }
-                  else
-                  {
-                    d='';
+                  if (password.text == '' ||
+                      newpassword.text == '' ||
+                      confirnpassword.text == '') {
+                    d = 'Vui lòng nhập đầy đủ thông tin';
+                  } else if (password.text !=
+                      s.elementAt(0)["password"].toString()) {
+                    d = 'Mật khẩu sai';
+                  } else if (confirnpassword.text != newpassword.text) {
+                    d = 'Mật khẩu không trùng khớp';
+                  } else {
+                    d = '';
                     API(
-                          url:
-                              "http://10.0.2.2:8000/doan/api/cap_nhat_password.php?password=" +
-                                  newpassword.text +
-                                  "&id=" +
-                                  s.elementAt(0)["id"].toString())
-                      .getDataString()
-                      .then((value) {
-                    them = value;
-                    print(value);
-                    isUpdate = false;
-                  });
-                  Navigator.pop(context);
+                            url:
+                                "http://10.0.2.2:8000/doan/api/cap_nhat_password.php?password=" +
+                                    newpassword.text +
+                                    "&id=" +
+                                    s.elementAt(0)["id"].toString())
+                        .getDataString()
+                        .then((value) {
+                      them = value;
+                      print(value);
+                      isUpdate = false;
+                    });
+                    Navigator.pop(context);
                   }
                   setState(() {});
                 }),
-                Container(
+            Container(
               padding: EdgeInsets.only(top: 10),
               child: Text(d),
             )
@@ -211,17 +199,17 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+
   Widget build(BuildContext context) {
-      API(
-              url:
-                  "http://10.0.2.2:8000/doan/api/lay_thong_tin_nguoi_dung.php/?id=" +
-                      widget.username)
-          .getDataString()
-          .then((value) {
-        s = json.decode(value);
-        isUpdate = false;
-        setState(() {});
-      });
+    API(
+            url: "http://10.0.2.2:8000/doan/api/lay_thong_tin_nguoi_dung.php/?id=" +
+                widget.username)
+        .getDataString()
+        .then((value) {
+      s = json.decode(value);
+      isUpdate = false;
+      setState(() {});
+    });
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -250,12 +238,13 @@ class _ProfileState extends State<Profile> {
                         height: 10.0,
                       ),
                       Text(
-                        s.length> 0?s.elementAt(0)["fullname"].toString(): 'fail!s',
+                        s.length > 0
+                            ? s.elementAt(0)["fullname"].toString()
+                            : 'fail!s',
                         style: TextStyle(
-                          fontSize: 25.0,
-                          color: Colors.white,
-                         fontWeight: FontWeight.bold
-                        ),
+                            fontSize: 25.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
                         height: 10.0,
@@ -362,12 +351,14 @@ class _ProfileState extends State<Profile> {
                   SizedBox(
                     height: 10.0,
                   ),
-                  Text(s.length> 0?'Phone: ' +
-                        s.elementAt(0)["phone"].toString() +
-                        '\n'
-                            'Email: ' +
-                        s.elementAt(0)["email"].toString():'fail!'
-                    ,
+                  Text(
+                    s.length > 0
+                        ? 'Phone: ' +
+                            s.elementAt(0)["phone"].toString() +
+                            '\n'
+                                'Email: ' +
+                            s.elementAt(0)["email"].toString()
+                        : 'fail!',
                     style: TextStyle(
                       fontSize: 22.0,
                       fontStyle: FontStyle.italic,
@@ -387,10 +378,8 @@ class _ProfileState extends State<Profile> {
             width: 300.00,
             child: RaisedButton(
                 onPressed: () {
-                  Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>  Update()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Update()));
                 },
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(80.0)),
@@ -410,6 +399,42 @@ class _ProfileState extends State<Profile> {
                     alignment: Alignment.center,
                     child: Text(
                       "Update",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 26.0,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ),
+                )),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Container(
+            width: 300.00,
+            child: RaisedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Login()));
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(80.0)),
+                elevation: 0.0,
+                padding: EdgeInsets.all(0.0),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                        colors: [Colors.redAccent, Colors.pinkAccent]),
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: Container(
+                    constraints:
+                        BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "LogOut",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 26.0,

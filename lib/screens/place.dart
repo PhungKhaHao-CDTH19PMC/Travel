@@ -64,7 +64,7 @@ class _MyGridScreenState extends State<MyGridScreen> {
                 onPressed: () {
                   API(
                           url:
-                              "http://10.0.2.2:8000/doan/api/chia_se.php/?nguoi_dung_id=" +
+                              "http://10.0.2.2/doan:8000/api/chia_se.php/?nguoi_dung_id=" +
                                   widget.username +
                                   "&dia_danh_id=" +
                                   s.elementAt(index)["id"].toString() +
@@ -111,7 +111,9 @@ class _MyGridScreenState extends State<MyGridScreen> {
                   child: Column(
                     children: [
                       ListTile(
-                        title: Text('Name: '+s.elementAt(index)["name"].toString(), style:TextStyle(fontWeight: FontWeight.bold)),
+                        title: Text(
+                            'Name: ' + s.elementAt(index)["name"].toString(),
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         trailing: Icon(Icons.favorite_outline),
                       ),
                       Container(
@@ -125,8 +127,8 @@ class _MyGridScreenState extends State<MyGridScreen> {
                       Container(
                         padding: EdgeInsets.all(16.0),
                         alignment: Alignment.centerLeft,
-                        child:
-                            Text('Description: '+s.elementAt(index)["description"].toString()),
+                        child: Text('Description: ' +
+                            s.elementAt(index)["description"].toString()),
                       ),
                       ButtonBar(
                         children: [

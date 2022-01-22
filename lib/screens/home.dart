@@ -26,40 +26,46 @@ class _HomePage extends State<HomePage> {
   @override
   Widget Share(int index) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Chi tiết bài viết'),
-      ),
-      body: Container(
-        padding: const EdgeInsets.only(top: 20),
-        child: SizedBox(
-          child: Card(
-                  elevation: 4.0,
-                  child: Column(
-                    children: [
-                      ListTile(
-                        title: Text(s.length > 0 ? ('Name: '+s.elementAt(index)["name"].toString()) : 'fail!', style:TextStyle(fontWeight: FontWeight.bold)),
-                        trailing: Icon(Icons.favorite_outline),
-                      ),
-                      Container(
-                        height: 200.0,
-                        child: Ink.image(
-                          image: NetworkImage(s.length > 0 ? s.elementAt(index)["imagepath"].toString():'https://bizflyportal.mediacdn.vn/bizflyportal/459/347/2020/06/02/17/37/70515910726734841.jpg'
-                             ),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.all(16.0),
-                        alignment: Alignment.centerLeft,
-                        child: Text(s.length > 0 ? ('Description: '+s.elementAt(index)["description"].toString()) : 'fail!'),
-                      ),
-
-                    ],
+        appBar: AppBar(
+          title: Text('Chi tiết bài viết'),
         ),
-      ),
-        )
-      )
-    );
+        body: Container(
+            padding: const EdgeInsets.only(top: 20),
+            child: SizedBox(
+              child: Card(
+                elevation: 4.0,
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text(
+                          s.length > 0
+                              ? ('Name: ' +
+                                  s.elementAt(index)["name"].toString())
+                              : 'fail!',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      trailing: Icon(Icons.favorite_outline),
+                    ),
+                    Container(
+                      height: 200.0,
+                      child: Ink.image(
+                        image: NetworkImage(s.length > 0
+                            ? s.elementAt(index)["imagepath"].toString()
+                            : 'https://bizflyportal.mediacdn.vn/bizflyportal/459/347/2020/06/02/17/37/70515910726734841.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(16.0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(s.length > 0
+                          ? ('Description: ' +
+                              s.elementAt(index)["description"].toString())
+                          : 'fail!'),
+                    ),
+                  ],
+                ),
+              ),
+            )));
   }
 
   Widget build(BuildContext context) {
@@ -87,7 +93,10 @@ class _HomePage extends State<HomePage> {
                   child: Column(
                     children: [
                       ListTile(
-                        title: Text('User: '+s.elementAt(index)["fullname"].toString(), style:TextStyle(fontWeight: FontWeight.bold)),
+                        title: Text(
+                            'User: ' +
+                                s.elementAt(index)["fullname"].toString(),
+                            style: TextStyle(fontWeight: FontWeight.bold)),
                         trailing: Icon(Icons.favorite_outline),
                       ),
                       Container(
@@ -101,7 +110,8 @@ class _HomePage extends State<HomePage> {
                       Container(
                         padding: EdgeInsets.all(16.0),
                         alignment: Alignment.centerLeft,
-                        child: Text('Cảm nghĩ: '+s.elementAt(index)["feeling"].toString()),
+                        child: Text('Cảm nghĩ: ' +
+                            s.elementAt(index)["feeling"].toString()),
                       ),
                       ButtonBar(
                         children: [

@@ -33,8 +33,25 @@ class LoginState extends State<Login> {
   String b = '';
   String c = '';
   String? errorMessage;
+  int t = 0;
   @override
   Widget build(BuildContext context) {
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    AlertDialog alert = AlertDialog(
+      title: Text("Sai thông tin"),
+      content: Text(
+        "Vui lòng kiểm tra lại thông tin tài khoản!",
+        style: TextStyle(color: Colors.red),
+      ),
+      actions: [
+        okButton,
+      ],
+    );
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
@@ -76,16 +93,16 @@ class LoginState extends State<Login> {
                               child: TextFormField(
                                 controller: usernameController,
                                 validator: (value) {
-                                  if (value == null) {
-                                    return ("Please Enter Your Email");
+                                  if (value == "") {
+                                    return ("Please Enter Your Uername");
                                   }
+                                  return "";
                                   // reg expression for email validation
-                                  if (!RegExp(
-                                          "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
-                                      .hasMatch(value)) {
-                                    return ("Please Enter a valid email");
-                                  }
-                                  return null;
+                                  // if (!RegExp(
+                                  //         "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
+                                  //     .hasMatch(value)) {
+                                  //   return ("Please Enter a valid email");
+                                  // }
                                 },
                                 onSaved: (value) {
                                   usernameController.text = value!;
@@ -124,12 +141,13 @@ class LoginState extends State<Login> {
                                 controller: passwordController,
                                 validator: (value) {
                                   RegExp regex = new RegExp(r'^.{6,}$');
-                                  if (value == null) {
+                                  if (value == "") {
                                     return ("Password is required for login");
                                   }
-                                  if (!regex.hasMatch(value)) {
-                                    return ("Enter Valid Password(Min. 6 Character)");
-                                  }
+                                  return "";
+                                  // if (!regex.hasMatch(value)) {
+                                  //   return ("Enter Valid Password(Min. 6 Character)");
+                                  // }
                                 },
                                 onSaved: (value) {
                                   passwordController.text = value!;
@@ -206,6 +224,11 @@ class LoginState extends State<Login> {
                                   ),
                                 ),
                                 onPressed: () {
+                                  if (usernameController.text == '' ||
+                                      passwordController.text == '') {
+                                    signIn(usernameController.text,
+                                        passwordController.text);
+                                  }
                                   API(
                                           url:
                                               "http://10.0.2.2:8000/doan/api/dang_nhap.php/?username=" +
@@ -215,9 +238,9 @@ class LoginState extends State<Login> {
                                       .getDataString()
                                       .then((value) {
                                     s = json.decode(value);
+                                    c = value;
                                     a = s.elementAt(0)["username"].toString();
                                     b = s.elementAt(0)["password"].toString();
-
                                     if (a == usernameController.text &&
                                         b == passwordController.text) {
                                       setState(() {
@@ -234,25 +257,13 @@ class LoginState extends State<Login> {
                                                   });
                                     }
                                   });
-                                  setState(() {
-                                    c = "Login fail";
-                                  });
                                 },
-                              ),
-                            ),
-                            Container(
-                              child: Text(
-                                c,
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.red,
-                                    fontSize: 20),
                               ),
                             ),
                             Container(
                               child: FlatButton(
                                 child: Text(
-                                  'forgot password',
+                                  'Forgot password',
                                   style: TextStyle(
                                       decoration: TextDecoration.underline,
                                       color: Colors.black,
@@ -439,5 +450,9 @@ class LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void signIn(String email, String password) async {
+    if (_formKey.currentState!.validate()) {}
   }
 }
