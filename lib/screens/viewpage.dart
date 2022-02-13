@@ -7,7 +7,7 @@ import 'package:travel/screens/profile.dart';
 import 'package:travel/screens/share.dart';
 
 class ViewPage extends StatelessWidget {
-  final String username;
+  String username;
   ViewPage({Key? key, required this.username}) : super(key: key);
   @override
   Widget build(BuildContext context) {

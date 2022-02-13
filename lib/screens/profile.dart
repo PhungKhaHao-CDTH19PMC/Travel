@@ -229,9 +229,7 @@ class _ProfileState extends State<Profile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          "https://scontent.fvca1-4.fna.fbcdn.net/v/t1.6435-9/118387249_926204791198426_1997447177852213166_n.jpg?_nc_cat=109&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=v5-AUFObwsAAX-IMxnq&_nc_ht=scontent.fvca1-4.fna&oh=00_AT_q0L9qUyUz807px1Z6oQxygbm_cJkKB4DGT9cn5CIYwA&oe=61F91327",
-                        ),
+                        backgroundColor: Colors.black,
                         radius: 50.0,
                       ),
                       SizedBox(

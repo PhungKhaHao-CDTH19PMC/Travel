@@ -4,15 +4,16 @@ import 'package:map_launcher/map_launcher.dart';
 import 'UserProfile.dart';
 import 'api.dart';
 
-class HomePage extends StatefulWidget {
+class UserProfile extends StatefulWidget {
   String username;
-  HomePage({Key? key, required this.username}) : super(key: key);
+  String fullname;
+  UserProfile({Key? key, required this.username, required this.fullname}) : super(key: key);
 
   @override
-  _HomePage createState() => _HomePage();
+  _UserProfile createState() => _UserProfile();
 }
 
-class _HomePage extends State<HomePage> {
+class _UserProfile extends State<UserProfile> {
   Iterable s = [];
   Iterable ss = [];
   bool isUpdate = true;
@@ -70,7 +71,8 @@ class _HomePage extends State<HomePage> {
   }
 
   Widget build(BuildContext context) {
-    API(url: "http://10.0.2.2:8000/doan/api/lay_tat_ca_chia_se.php")
+    API(url: "http://10.0.2.2:8000/doan/api/bai_chia_se.php/?nguoi_dung_id="+
+                widget.username)
         .getDataString()
         .then((value) {
       s = json.decode(value);
@@ -80,7 +82,7 @@ class _HomePage extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trang Chủ'),
+        title: Text(widget.fullname),
       ),
       body: Container(
         padding: const EdgeInsets.only(top: 20),
@@ -95,27 +97,11 @@ class _HomePage extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       ListTile(
-                        title: Container(child: 
-                        Row(
-                          children: [
-                            TextButton(
-                            onPressed: () {  
-                              
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserProfile(username: s.elementAt(index)["nguoi_dung_id"].toString(), fullname: s.elementAt(index)["fullname"].toString(),)));
-                            },
-                            child:Text('User: ' +
-                                s.elementAt(index)["fullname"].toString(),
+                        title: Text('Name: ' +
+                                s.elementAt(index)["name"].toString(),
                             style: TextStyle(fontWeight: FontWeight.bold,)) ,
                             
                             ),
-                          ],
-                        )
-                        ),
-                      
-                      ),
                       Container(
                         height: 200.0,
                         child: Ink.image(

@@ -10,10 +10,13 @@ class MyGridScreen extends StatefulWidget {
   @override
   _MyGridScreenState createState() => _MyGridScreenState();
 }
-
+int _iApi=0;
+String _urlFind = "http://10.0.2.2:8000/doan/api/tim_kiem.php/?find=";
+String _iUrl="";
 class _MyGridScreenState extends State<MyGridScreen> {
   Iterable s = [];
   bool isUpdate = true;
+  TextEditingController _controller= new TextEditingController();
   Future<void> local(double a, double b) async {
     final availableMap = await MapLauncher.installedMaps;
     await availableMap.first.showMarker(
@@ -23,6 +26,31 @@ class _MyGridScreenState extends State<MyGridScreen> {
   }
 
   @override
+  WidgetSearch() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(5, 20, 5, 0),
+      child: TextField(
+        controller: _controller,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          labelText: 'Search',
+        ),
+        onChanged: (String value) {
+          setState(() {
+            if (_controller.text == "") {
+              _iApi = 0;
+              isUpdate = true;
+            } else {
+              _iUrl = "";
+              _iUrl = _urlFind + _controller.text;
+              _iApi = 1;
+              isUpdate = true;
+            }
+          });
+        },
+      ),
+    );
+  }
   Widget Share(int index) {
     TextEditingController _feeling = TextEditingController();
     TextEditingController _imagepath = TextEditingController();
@@ -64,7 +92,7 @@ class _MyGridScreenState extends State<MyGridScreen> {
                 onPressed: () {
                   API(
                           url:
-                              "http://10.0.2.2/doan:8000/api/chia_se.php/?nguoi_dung_id=" +
+                              "http://10.0.2.2:8000/doan/api/chia_se.php/?nguoi_dung_id=" +
                                   widget.username +
                                   "&dia_danh_id=" +
                                   s.elementAt(index)["id"].toString() +
@@ -86,22 +114,13 @@ class _MyGridScreenState extends State<MyGridScreen> {
       ),
     );
   }
-
-  Widget build(BuildContext context) {
-    API(url: "http://10.0.2.2:8000/doan/api/lay_dia_danh.php")
-        .getDataString()
-        .then((value) {
-      s = json.decode(value);
-      isUpdate = false;
-      setState(() {});
-    });
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Địa điểm hot'),
-      ),
-      body: Container(
+  Widget buildList(){
+    double height=MediaQuery.of(context).size.height;
+  return Container(
+    
         padding: const EdgeInsets.only(top: 20),
         child: SizedBox(
+          height: height-150,
           child: Expanded(
             child: ListView.builder(
               itemCount: s.length,
@@ -159,50 +178,40 @@ class _MyGridScreenState extends State<MyGridScreen> {
             ),
           ),
         ),
+      );
+}
+  Widget build(BuildContext context) {
+    if (isUpdate == true) {
+    switch (_iApi) {
+        case 0:
+          API(url: "http://10.0.2.2:8000/doan/api/lay_dia_danh.php")
+          .getDataString()
+          .then((value) {
+          s = json.decode(value);
+          isUpdate = false;
+          setState(() {});
+        });
+          break;
+        case 1:
+          API(url: _iUrl)
+          .getDataString()
+          .then((value) {
+          s = json.decode(value);
+          isUpdate = false;
+          setState(() {});
+        });
+          break;
+      }
+    }
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Địa điểm hot'),
       ),
+      body: ListView(children: [
+        WidgetSearch(), buildList()
+      ],)
     );
   }
+  
 }
 
-Card buildCard() {
-  var heading = '\Biển Vũng Tàu';
-  var subheading = 'Nước xanh tươi';
-  var cardImage = AssetImage('assets/images/beach.jpg');
-  var supportingText =
-      'Một trong những bãi biển đẹp nhất Việt Nam.Nước trong xanh mát mẻ.';
-  return Card(
-      elevation: 4.0,
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(heading),
-            subtitle: Text(subheading),
-            trailing: Icon(Icons.favorite_outline),
-          ),
-          Container(
-            height: 200.0,
-            child: Ink.image(
-              image: cardImage,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16.0),
-            alignment: Alignment.centerLeft,
-            child: Text(supportingText),
-          ),
-          ButtonBar(
-            children: [
-              TextButton(
-                child: const Text('CONTACT AGENT'),
-                onPressed: () {/* ... */},
-              ),
-              TextButton(
-                child: const Text('LEARN MORE'),
-                onPressed: () {/* ... */},
-              )
-            ],
-          )
-        ],
-      ));
-}
