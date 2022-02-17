@@ -80,7 +80,7 @@ class _HomePage extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trang Chủ'),
+        title: Text('Tất cả bài chia sẽ'),
       ),
       body: Container(
         padding: const EdgeInsets.only(top: 20),
@@ -114,14 +114,19 @@ class _HomePage extends State<HomePage> {
                                             )));
                               },
                               child: Text(
-                                  'User: ' +
-                                      s.elementAt(index)["fullname"].toString(),
+                                  s.elementAt(index)["fullname"].toString(),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                   )),
                             ),
                           ],
                         )),
+                        trailing: Icon(Icons.favorite_outline),
+                        leading: CircleAvatar(
+                            radius: 25,
+                            backgroundImage: NetworkImage(
+                              (s.elementAt(index)["imageuser"].toString()),
+                            )),
                       ),
                       Container(
                         height: 200.0,
@@ -158,7 +163,7 @@ class _HomePage extends State<HomePage> {
                             },
                           )
                         ],
-                      )
+                      ),
                     ],
                   ),
                 );

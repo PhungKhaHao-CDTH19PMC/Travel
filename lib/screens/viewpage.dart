@@ -19,10 +19,11 @@ class ViewPage extends StatelessWidget {
           bottomNavigationBar: menu(),
           body: TabBarView(
             children: [
-              HomePage(username: username),
+              
               MyGridScreen(
                 username: username,
               ),
+              HomePage(username: username),
               Share(username: username),
               Profile(
                 username: username,

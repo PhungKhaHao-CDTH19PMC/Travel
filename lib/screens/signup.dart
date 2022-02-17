@@ -26,6 +26,7 @@ class SignUpState extends State<SignUp> {
       TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final TextEditingController imageController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   bool _hidepassword = false;
@@ -59,7 +60,7 @@ class SignUpState extends State<SignUp> {
                           borderRadius: BorderRadius.circular(8.0)),
                       child: Container(
                         width: 360.00,
-                        height: 600.00,
+                        height: 700.00,
                         child: Column(
                           children: <Widget>[
                             Padding(
@@ -272,6 +273,46 @@ class SignUpState extends State<SignUp> {
                               ),
                             ),
                             Container(
+                              width: 250.0,
+                              height: 1.0,
+                              color: Colors.grey,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 20.0,
+                                  bottom: 20,
+                                  left: 25.0,
+                                  right: 25.0),
+                              child: TextFormField(
+                                controller: imageController,
+                                validator: (value) {
+                                  if (value == '') {
+                                    return ('Vui lòng nhập link image');
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  phoneController.text = value!;
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                style: const TextStyle(
+                                    fontFamily: "SignikaSemiBold",
+                                    fontSize: 16.0,
+                                    color: Colors.black),
+                                decoration: const InputDecoration(
+                                    border: InputBorder.none,
+                                    icon: Icon(
+                                      FontAwesomeIcons.user,
+                                      color: Colors.black,
+                                      size: 22.0,
+                                    ),
+                                    hintText: "Enter link Image",
+                                    hintStyle: TextStyle(
+                                        fontFamily: "SignikaSemiBold",
+                                        fontSize: 18.0)),
+                              ),
+                            ),
+                            Container(
                               decoration: const BoxDecoration(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(5.0)),
@@ -332,7 +373,9 @@ class SignUpState extends State<SignUp> {
                                                     "&email=" +
                                                     emailController.text +
                                                     "&phone=" +
-                                                    phoneController.text)
+                                                    phoneController.text +
+                                                    "&imageuser=" +
+                                                    imageController.text)
                                         .getDataString()
                                         .then((value) {
                                       s = json.decode(value);

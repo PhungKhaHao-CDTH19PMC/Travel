@@ -35,7 +35,7 @@ class _MyGridScreenState extends State<MyGridScreen> {
         controller: _controller,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
-          labelText: 'Search',
+          labelText: 'Nhập tên địa danh',
         ),
         onChanged: (String value) {
           setState(() {
@@ -121,7 +121,9 @@ class _MyGridScreenState extends State<MyGridScreen> {
   Widget buildList() {
     double height = MediaQuery.of(context).size.height;
     return Container(
-      padding: const EdgeInsets.only(top: 20),
+      padding: const EdgeInsets.only(
+        top: 20,
+      ),
       child: SizedBox(
         height: height - 150,
         child: Expanded(
@@ -146,12 +148,6 @@ class _MyGridScreenState extends State<MyGridScreen> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(16.0),
-                      alignment: Alignment.centerLeft,
-                      child: Text('Description: ' +
-                          s.elementAt(index)["description"].toString()),
-                    ),
                     ButtonBar(
                       children: [
                         TextButton(
@@ -159,6 +155,15 @@ class _MyGridScreenState extends State<MyGridScreen> {
                           onPressed: () {
                             local(double.parse(s.elementAt(index)["location1"]),
                                 double.parse(s.elementAt(index)["location2"]));
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('DETAIL'),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => detail(index)));
                           },
                         ),
                         TextButton(
@@ -180,6 +185,50 @@ class _MyGridScreenState extends State<MyGridScreen> {
         ),
       ),
     );
+  }
+
+  Widget detail(int index) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Chi tiết bài viết'),
+        ),
+        body: Container(
+            padding: const EdgeInsets.only(top: 20),
+            child: SizedBox(
+              child: Card(
+                elevation: 4.0,
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text(
+                          s.length > 0
+                              ? ('Name: ' +
+                                  s.elementAt(index)["name"].toString())
+                              : 'fail!',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      trailing: Icon(Icons.favorite_outline),
+                    ),
+                    Container(
+                      height: 200.0,
+                      child: Ink.image(
+                        image: NetworkImage(s.length > 0
+                            ? s.elementAt(index)["imagepath"].toString()
+                            : 'https://bizflyportal.mediacdn.vn/bizflyportal/459/347/2020/06/02/17/37/70515910726734841.jpg'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(16.0),
+                      alignment: Alignment.centerLeft,
+                      child: Text(s.length > 0
+                          ? ('Description: ' +
+                              s.elementAt(index)["description"].toString())
+                          : 'fail!'),
+                    ),
+                  ],
+                ),
+              ),
+            )));
   }
 
   Widget build(BuildContext context) {
