@@ -70,7 +70,7 @@ class _HomePage extends State<HomePage> {
   }
 
   Widget build(BuildContext context) {
-    API(url: "http://10.0.2.2:8000/doan/api/lay_tat_ca_chia_se.php")
+    API(url: "http://10.0.2.2/doan/api/lay_tat_ca_chia_se.php")
         .getDataString()
         .then((value) {
       s = json.decode(value);
@@ -95,26 +95,33 @@ class _HomePage extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       ListTile(
-                        title: Container(child: 
-                        Row(
+                        title: Container(
+                            child: Row(
                           children: [
                             TextButton(
-                            onPressed: () {  
-                              
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserProfile(username: s.elementAt(index)["nguoi_dung_id"].toString(), fullname: s.elementAt(index)["fullname"].toString(),)));
-                            },
-                            child:Text('User: ' +
-                                s.elementAt(index)["fullname"].toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold,)) ,
-                            
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UserProfile(
+                                              username: s
+                                                  .elementAt(
+                                                      index)["nguoi_dung_id"]
+                                                  .toString(),
+                                              fullname: s
+                                                  .elementAt(index)["fullname"]
+                                                  .toString(),
+                                            )));
+                              },
+                              child: Text(
+                                  'User: ' +
+                                      s.elementAt(index)["fullname"].toString(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  )),
                             ),
                           ],
-                        )
-                        ),
-                      
+                        )),
                       ),
                       Container(
                         height: 200.0,
@@ -163,4 +170,3 @@ class _HomePage extends State<HomePage> {
     );
   }
 }
-

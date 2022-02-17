@@ -111,7 +111,7 @@ class _Share extends State<Share> {
                 onPressed: () {
                   API(
                           url:
-                              "http://10.0.2.2:8000/doan/api/cap_nhat_bai_chia_se.php?feeling=" +
+                              "http://10.0.2.2/doan/api/cap_nhat_bai_chia_se.php?feeling=" +
                                   _feeling.text +
                                   "&image=" +
                                   _image.text +
@@ -177,7 +177,7 @@ class _Share extends State<Share> {
                 onPressed: () {
                   API(
                           url:
-                              "http://10.0.2.2:8000/doan/api/xoa_bai_chia_se.php?id=" +
+                              "http://10.0.2.2/doan/api/xoa_bai_chia_se.php?id=" +
                                   s.elementAt(index)["idcs"].toString())
                       .getDataString()
                       .then((value) {
@@ -196,7 +196,7 @@ class _Share extends State<Share> {
 
   Widget build(BuildContext context) {
     API(
-            url: "http://10.0.2.2:8000/doan/api/bai_chia_se.php/?nguoi_dung_id=" +
+            url: "http://10.0.2.2/doan/api/bai_chia_se.php/?nguoi_dung_id=" +
                 widget.username)
         .getDataString()
         .then((value) {

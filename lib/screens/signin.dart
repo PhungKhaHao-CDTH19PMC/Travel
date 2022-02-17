@@ -231,7 +231,7 @@ class LoginState extends State<Login> {
                                   }
                                   API(
                                           url:
-                                              "http://10.0.2.2:8000/doan/api/dang_nhap.php/?username=" +
+                                              "http://10.0.2.2/doan/api/dang_nhap.php/?username=" +
                                                   usernameController.text +
                                                   "&password=" +
                                                   passwordController.text)
@@ -245,16 +245,16 @@ class LoginState extends State<Login> {
                                         b == passwordController.text) {
                                       setState(() {
                                         c = "";
-                                      
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ViewPage(
-                                                    username: s
-                                                        .elementAt(0)["id"]
-                                                        .toString(),
-                                                  )));
-                                                  });
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => ViewPage(
+                                                      username: s
+                                                          .elementAt(0)["id"]
+                                                          .toString(),
+                                                    )));
+                                      });
                                     }
                                   });
                                 },

@@ -75,7 +75,7 @@ class _ProfileState extends State<Profile> {
                     c = '';
                     API(
                             url:
-                                "http://10.0.2.2:8000/doan/api/cap_nhat_tai_khoan.php?name=" +
+                                "http://10.0.2.2/doan/api/cap_nhat_tai_khoan.php?name=" +
                                     name.text +
                                     "&email=" +
                                     email.text +
@@ -176,7 +176,7 @@ class _ProfileState extends State<Profile> {
                     d = '';
                     API(
                             url:
-                                "http://10.0.2.2:8000/doan/api/cap_nhat_password.php?password=" +
+                                "http://10.0.2.2/doan/api/cap_nhat_password.php?password=" +
                                     newpassword.text +
                                     "&id=" +
                                     s.elementAt(0)["id"].toString())
@@ -202,7 +202,7 @@ class _ProfileState extends State<Profile> {
 
   Widget build(BuildContext context) {
     API(
-            url: "http://10.0.2.2:8000/doan/api/lay_thong_tin_nguoi_dung.php/?id=" +
+            url: "http://10.0.2.2/doan/api/lay_thong_tin_nguoi_dung.php/?id=" +
                 widget.username)
         .getDataString()
         .then((value) {

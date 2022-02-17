@@ -7,7 +7,8 @@ import 'api.dart';
 class UserProfile extends StatefulWidget {
   String username;
   String fullname;
-  UserProfile({Key? key, required this.username, required this.fullname}) : super(key: key);
+  UserProfile({Key? key, required this.username, required this.fullname})
+      : super(key: key);
 
   @override
   _UserProfile createState() => _UserProfile();
@@ -71,7 +72,8 @@ class _UserProfile extends State<UserProfile> {
   }
 
   Widget build(BuildContext context) {
-    API(url: "http://10.0.2.2:8000/doan/api/bai_chia_se.php/?nguoi_dung_id="+
+    API(
+            url: "http://10.0.2.2/doan/api/bai_chia_se.php/?nguoi_dung_id=" +
                 widget.username)
         .getDataString()
         .then((value) {
@@ -97,11 +99,12 @@ class _UserProfile extends State<UserProfile> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       ListTile(
-                        title: Text('Name: ' +
-                                s.elementAt(index)["name"].toString(),
-                            style: TextStyle(fontWeight: FontWeight.bold,)) ,
-                            
-                            ),
+                        title: Text(
+                            'Name: ' + s.elementAt(index)["name"].toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            )),
+                      ),
                       Container(
                         height: 200.0,
                         child: Ink.image(
@@ -149,4 +152,3 @@ class _UserProfile extends State<UserProfile> {
     );
   }
 }
-
