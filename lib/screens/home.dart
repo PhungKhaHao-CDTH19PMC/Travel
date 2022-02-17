@@ -80,7 +80,7 @@ class _HomePage extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Trang Chủ'),
+        title: Text('Tất cả bài chia sẽ'),
       ),
       body: Container(
         padding: const EdgeInsets.only(top: 20),
@@ -106,7 +106,7 @@ class _HomePage extends State<HomePage> {
                                   MaterialPageRoute(
                                       builder: (context) => UserProfile(username: s.elementAt(index)["nguoi_dung_id"].toString(), fullname: s.elementAt(index)["fullname"].toString(),)));
                             },
-                            child:Text('User: ' +
+                            child:Text(
                                 s.elementAt(index)["fullname"].toString(),
                             style: TextStyle(fontWeight: FontWeight.bold,)) ,
                             
@@ -114,8 +114,13 @@ class _HomePage extends State<HomePage> {
                           ],
                         )
                         ),
-                      
+                        trailing: Icon(Icons.favorite_outline),
+                      leading: CircleAvatar(
+                              radius: 25,                      
+                                backgroundImage: NetworkImage((s.elementAt(index)["imageuser"].toString()),
+                          )),
                       ),
+
                       Container(
                         height: 200.0,
                         child: Ink.image(
@@ -151,7 +156,8 @@ class _HomePage extends State<HomePage> {
                             },
                           )
                         ],
-                      )
+                      ),
+                      
                     ],
                   ),
                 );

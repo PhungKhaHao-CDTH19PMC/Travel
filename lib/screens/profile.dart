@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:travel/screens/adddiadanh.dart';
 import 'package:travel/screens/signin.dart';
 import 'api.dart';
 
@@ -114,7 +115,6 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
-
   Widget ChangePass() {
     TextEditingController password = new TextEditingController();
     TextEditingController newpassword = new TextEditingController();
@@ -229,7 +229,7 @@ class _ProfileState extends State<Profile> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       CircleAvatar(
-                        backgroundColor: Colors.black,
+                        backgroundImage: NetworkImage(s.length > 0? s.elementAt(0)["imageuser"].toString():"https://thuthuatnhanh.com/wp-content/uploads/2019/10/anh-avatar-soai-ca-superman.jpg"),
                         radius: 50.0,
                       ),
                       SizedBox(
@@ -396,7 +396,43 @@ class _ProfileState extends State<Profile> {
                         BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
                     alignment: Alignment.center,
                     child: Text(
-                      "Update",
+                      "Update Profile",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 26.0,
+                          fontWeight: FontWeight.w300),
+                    ),
+                  ),
+                )),
+          ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Container(
+            width: 300.00,
+            child: RaisedButton(
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddScreen()));
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(80.0)),
+                elevation: 0.0,
+                padding: EdgeInsets.all(0.0),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                        begin: Alignment.centerRight,
+                        end: Alignment.centerLeft,
+                        colors: [Colors.redAccent, Colors.pinkAccent]),
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: Container(
+                    constraints:
+                        BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Thêm địa danh",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 26.0,
@@ -441,6 +477,7 @@ class _ProfileState extends State<Profile> {
                   ),
                 )),
           ),
+          
         ],
       ),
     );
