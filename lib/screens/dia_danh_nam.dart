@@ -1,27 +1,21 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:map_launcher/map_launcher.dart';
-import 'package:travel/screens/dia_danh_bac.dart';
-import 'package:travel/screens/dia_danh_bien.dart';
-import 'package:travel/screens/dia_danh_nam.dart';
-import 'package:travel/screens/dia_danh_nui.dart';
-import 'package:travel/screens/dia_danh_trung.dart';
 import 'api.dart';
 
-class MyGridScreen extends StatefulWidget {
+class Nam extends StatefulWidget {
   String username;
-  MyGridScreen({Key? key, required this.username}) : super(key: key);
+  Nam({Key? key, required this.username}) : super(key: key);
 
   @override
-  _MyGridScreenState createState() => _MyGridScreenState();
+  _NamState createState() => _NamState();
 }
 
 int _iApi = 0;
 String _urlFind = "http://10.0.2.2/doan/api/tim_kiem.php/?find=";
 String _iUrl = "";
-String Des = "";
 
-class _MyGridScreenState extends State<MyGridScreen> {
+class _NamState extends State<Nam> {
   Iterable s = [];
   bool isUpdate = true;
   TextEditingController _controller = new TextEditingController();
@@ -34,32 +28,6 @@ class _MyGridScreenState extends State<MyGridScreen> {
   }
 
   @override
-  WidgetSearch() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(5, 20, 5, 0),
-      child: TextField(
-        controller: _controller,
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          labelText: 'Nhập tên địa danh',
-        ),
-        onChanged: (String value) {
-          setState(() {
-            if (_controller.text == "") {
-              _iApi = 0;
-              isUpdate = true;
-            } else {
-              _iUrl = "";
-              _iUrl = _urlFind + _controller.text;
-              _iApi = 1;
-              isUpdate = true;
-            }
-          });
-        },
-      ),
-    );
-  }
-
   Widget Share(int index) {
     TextEditingController _feeling = TextEditingController();
     TextEditingController _imagepath = TextEditingController();
@@ -154,14 +122,6 @@ class _MyGridScreenState extends State<MyGridScreen> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    Text(s.length > 0
-                        ? ('Description: ' +
-                            s
-                                .elementAt(index)["description"]
-                                .substring(0, 100)
-                                .toString() +
-                            '...')
-                        : 'fail!'),
                     ButtonBar(
                       children: [
                         TextButton(
@@ -245,110 +205,20 @@ class _MyGridScreenState extends State<MyGridScreen> {
             )));
   }
 
-  Widget menu() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TextButton(
-              child: Text("Bắc"),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Bac(username: widget.username)));
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.greenAccent),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
-              )),
-          TextButton(
-              child: Text("Trung"),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            Trung(username: widget.username)));
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.greenAccent),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
-              )),
-          TextButton(
-              child: Text("Nam"),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Nam(username: widget.username)));
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.greenAccent),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
-              )),
-          TextButton(
-              child: Text("Núi"),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Nui(username: widget.username)));
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.greenAccent),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
-              )),
-          TextButton(
-              child: Text("Biển"),
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Bien(username: widget.username)));
-              },
-              style: ButtonStyle(
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.greenAccent),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
-              ))
-        ],
-      ),
-    );
-  }
-
   Widget build(BuildContext context) {
-    if (isUpdate == true) {
-      switch (_iApi) {
-        case 0:
-          API(url: "http://10.0.2.2/doan/api/lay_dia_danh.php")
-              .getDataString()
-              .then((value) {
-            s = json.decode(value);
-            isUpdate = false;
-            setState(() {});
-          });
-          break;
-        case 1:
-          API(url: _iUrl).getDataString().then((value) {
-            s = json.decode(value);
-            isUpdate = false;
-            setState(() {});
-          });
-          break;
-      }
-    }
+    API(url: "http://10.0.2.2/doan/api/lay_dia_danh_nam.php")
+        .getDataString()
+        .then((value) {
+      s = json.decode(value);
+      isUpdate = false;
+      setState(() {});
+    });
     return Scaffold(
         appBar: AppBar(
-          title: Text('Địa điểm hot'),
+          title: Text('Địa điểm ở miền nam'),
         ),
         body: ListView(
-          children: [WidgetSearch(), menu(), buildList()],
+          children: [buildList()],
         ));
   }
 }
